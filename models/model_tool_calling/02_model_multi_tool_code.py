@@ -80,7 +80,7 @@ messages.append(human_message)
 # 5.工具调用
 while True:
     # 每次循环模型都会看到更新后的 message 列表
-    response = model_with_tools.invoke(messages)
+    response = model_with_tools.invoke(messages)  # model_with_tools.invoke(messages) 时，模型（LLM）会返回一个 AIMessage 对象。
     messages.append(response)
 
     if response.tool_calls:
