@@ -1,3 +1,6 @@
+"""
+输出解析器
+"""
 from langchain.chat_models import init_chat_model
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
@@ -20,7 +23,6 @@ class Movie(BaseModel):
 
 
 # 2. 创建解析器 (Parser)
-# 注意变量名拼写纠正为 parser
 parser = JsonOutputParser(pydantic_object=Movie)
 
 # 3. 创建提示模板，并注入格式指令
