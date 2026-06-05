@@ -1,9 +1,8 @@
 """
-
-
+调用配置
 """
 from langchain.chat_models import init_chat_model
-from langchain_core.callbacks import StdOutCallbackHandler, BaseCallbackHandler
+from langchain_core.callbacks import  BaseCallbackHandler
 from langchain_core.runnables import ConfigurableField
 
 from env_utils import DEEPSEEK_API_KEY, DEEPSEEK_BASE_URL
