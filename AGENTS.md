@@ -53,6 +53,14 @@
 - 维护 README 前先运行 `python scripts/audit_project_readme.py`，再按扫描结果决定是否调整。
 - README 面向项目使用者和学习者；包级细节应放在对应 `__init__.py` 中。
 
+## 新增模块后的文档流程
+
+- 新建 Python 包后，先运行 `python scripts/audit_init_docs.py` 查看包说明状态。
+- 先维护新包的 `__init__.py`，再检查上级包的 `__init__.py` 是否需要增加子包导航。
+- 再运行 `python scripts/audit_project_readme.py`，判断根目录 `README.md`
+  是否需要补充目录结构、学习模块或运行命令。
+- `AGENTS.md` 只维护项目级协作规则；普通新增模块不需要写入本文件。
+
 ## 安全边界
 
 - 不泄露 `.env`、API Key、Token、密码等敏感信息。

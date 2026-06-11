@@ -18,16 +18,13 @@ description: Use this project-local skill when maintaining Python package __init
 
 ## 使用流程
 
-快捷入口：
+扫描入口：
 
 ```bash
-python scripts/run_package_init_doc_maintainer.py
+python scripts/audit_init_docs.py
 ```
 
-这个脚本会读取本 skill、执行 `scripts/audit_init_docs.py`，并提示继续参考
-`docs/skills/package-init-doc-maintainer/references/package-init-doc-guide.md`。
-
-手动流程：
+维护流程：
 
 1. 先读取项目约定：
 
@@ -44,9 +41,13 @@ python scripts/run_package_init_doc_maintainer.py
 
    - 目标目录的 `__init__.py`
    - 同目录下已有示例文件
-   - 必要时读取上一级包的 `__init__.py`
+   - 如果目标是新增子包，必须读取上一级包的 `__init__.py`
 
-4. 只根据实际代码增量更新文档。
+4. 只根据实际代码增量更新文档：
+
+   - 更新目标包的 `__init__.py`
+   - 新增子包时，在上一级 `__init__.py` 中补充简短子包导航
+   - 不在包说明中导入示例模块
 
 5. 修改后执行最小验证：
 
@@ -64,15 +65,13 @@ python scripts/run_package_init_doc_maintainer.py
 - `scripts/audit_init_docs.py`
   扫描项目内 Python 包和 `__init__.py` 文档状态。
 
-- `scripts/run_package_init_doc_maintainer.py`
-  包说明维护入口脚本，用于串联 skill、扫描脚本和 reference 细则。
-
 ## 适合处理的请求
 
 - “检查新增模块的 `__init__.py` 是否需要补说明”
 - “根据已有代码更新某个包说明”
 - “扫描包级说明是否和代码不一致”
 - “帮我把新写的示例加到包级说明里”
+- “新增子包后，同时更新子包和上级包说明”
 - “补充已有示例的学习说明或注释”
 
 ## 不适合处理的请求

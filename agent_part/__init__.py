@@ -43,6 +43,11 @@ Agent 示例模块。
    - 示例通过 context={"query_type": "..."} 在普通客服和 VIP 客服提示词之间切换。
    - 动态提示词会在每次模型调用前执行；如果 Agent 中途调用工具，可能触发多次。
 
+子包说明：
+
+- create_tool
+  演示使用 @tool、Pydantic 模型和 JSON Schema 创建 Agent 工具。
+
 运行注意事项：
 
 - 这些示例会调用真实大模型，运行前需要确认 .env 中配置了 DeepSeek 相关环境变量。

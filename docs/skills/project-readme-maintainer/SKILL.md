@@ -48,9 +48,15 @@ python scripts/audit_project_readme.py
    - 主要目录说明，例如 `models/__init__.py`、`agent_part/__init__.py`
    - 必要时读取更深层 `__init__.py`
 
-4. 只根据实际代码和已有说明增量维护 README；已有内容合理时不要重写。
+4. 新增模块时，先确认对应 `__init__.py` 已经维护，再根据包说明增量更新 README：
 
-5. Markdown 文件不需要 `py_compile`。如果同时修改了脚本，再执行语法检查。
+   - 新增一级目录或重要子包时，补充目录结构或学习模块
+   - 新增可直接运行的入口时，补充运行命令
+   - 普通内部文件变化不要求逐个写入 README
+
+5. 只根据实际代码和已有说明增量维护 README；已有内容合理时不要重写。
+
+6. Markdown 文件不需要 `py_compile`。如果同时修改了脚本，再执行语法检查。
 
 ## 当前配套资源
 

@@ -17,7 +17,8 @@
 
 ```text
 .
-├── agent_part/       # LangChain Agent 示例
+├── agent_part/       # LangChain Agent 与工具创建示例
+│   └── create_tool/  # @tool、Pydantic 和 JSON Schema 工具示例
 ├── models/           # 聊天模型能力示例
 ├── docs/skills/      # 项目文档维护 skill
 ├── scripts/          # 文档审计与维护辅助脚本
@@ -59,6 +60,7 @@ python quick_start.py
 python -m models.block_call
 python -m models.stream_output
 python -m agent_part.05_agent_dynamic_prompt
+python -m agent_part.create_tool.01_create_tool
 ```
 
 ## 学习模块
@@ -111,6 +113,22 @@ python -m agent_part.05_agent_dynamic_prompt
 - 配置字符串或 `SystemMessage` 系统提示词
 - 根据运行时 context 动态生成系统提示词
 
+### Agent 工具创建
+
+`agent_part/create_tool/` 演示三种 Agent 工具创建方式：
+
+- `01_create_tool.py`：使用 `@tool` 装饰器和函数签名创建工具
+- `02_create_pydantic_tool.py`：使用 Pydantic 模型定义强类型参数和字段校验
+- `03_create_schema_tool.py`：直接使用 JSON Schema 定义参数、枚举和必填规则
+
+可以从项目根目录按模块运行：
+
+```bash
+python -m agent_part.create_tool.01_create_tool
+python -m agent_part.create_tool.02_create_pydantic_tool
+python -m agent_part.create_tool.03_create_schema_tool
+```
+
 ## 运行注意事项
 
 - 多数示例会调用真实 DeepSeek 模型并消耗 API 额度。
@@ -129,8 +147,25 @@ python -m agent_part.05_agent_dynamic_prompt
 python scripts/audit_project_readme.py
 ```
 
-README 的维护规则位于：
+扫描各 Python 包的 `__init__.py` 说明状态：
+
+```bash
+python scripts/audit_init_docs.py
+```
+
+该脚本会列出项目中的 Python 包、包内示例文件，以及每个 `__init__.py`
+是否为空或包含包级说明。脚本只负责扫描，文档内容由 Codex 根据 skill 维护。
+
+项目内文档维护 skill 位于：
 
 ```text
+docs/skills/package-init-doc-maintainer/
 docs/skills/project-readme-maintainer/
+```
+
+在 Codex 中可以直接提出：
+
+```text
+使用 package-init-doc-maintainer 更新 create_tool 的 __init__.py
+使用 project-readme-maintainer 根据当前代码更新 README.md
 ```
