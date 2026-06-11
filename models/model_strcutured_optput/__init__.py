@@ -1,8 +1,11 @@
 """
-结构化输出模块 - 让 AI 返回格式化的数据
+结构化输出示例包 - 让 AI 返回格式化的数据
 
 本模块演示了如何使用 LangChain 的 with_structured_output() 方法，
 让大语言模型返回符合预定义结构的格式化数据，而非自由文本。
+
+说明：目录名 model_strcutured_optput 保留了当前项目已有命名，
+实际含义是 model_structured_output。
 
 核心功能：
 - 将 AI 响应自动解析为结构化的 Python 对象（字典或 Pydantic 实例）
