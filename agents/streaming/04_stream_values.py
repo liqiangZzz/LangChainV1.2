@@ -1,0 +1,42 @@
+"""演示使用 ``stream_mode="values"`` 查看每一步的完整 Agent 状态。
+
+与只返回节点增量的 ``updates`` 不同，``values`` 每次都会返回当前完整状态，
+因此消息列表会随着 Agent 执行不断增长。
+"""
+
+from langchain.agents import create_agent
+from langchain_core.tools import tool
+
+from my_llm import deepseek_llm
+
+
+@tool
+def get_weather(city: str) -> str:
+    """获取指定城市的模拟天气。"""
+    return f"{city}天气晴朗，温度 25°C。"
+
+
+def main() -> None:
+    """流式执行 Agent，并打印每一步的完整消息状态。"""
+    agent = create_agent(
+        model=deepseek_llm,
+        tools=[get_weather],
+        system_prompt="你是一个天气助手，需要查询天气时必须调用工具。",
+    )
+
+    for step, state in enumerate(
+        agent.stream(
+            {"messages": [{"role": "user", "content": "北京天气怎么样？"}]},
+            stream_mode="values",
+        ),
+        start=1,
+    ):
+        messages = state.get("messages", [])
+        print(f"\n第 {step} 次完整状态，消息数量：{len(messages)}")
+
+        if messages:
+            messages[-1].pretty_print()
+
+
+if __name__ == "__main__":
+    main()

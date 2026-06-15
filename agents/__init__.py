@@ -12,6 +12,9 @@ LangChain Agent 示例包。
 - async_invocation
   演示使用 ainvoke 在异步函数中调用 Agent，并获取完整消息历史。
 
+- streaming
+  演示使用 stream 和不同 stream_mode 观察 Agent 的流式执行过程。
+
 - tool_creation
   演示使用 @tool、Pydantic 模型和 JSON Schema 创建 Agent 工具。
 

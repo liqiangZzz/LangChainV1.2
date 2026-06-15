@@ -20,6 +20,7 @@
 ├── agents/           # LangChain Agent 与工具创建示例
 │   ├── basics/       # Agent 创建、调用、提示词与 middleware 示例
 │   ├── async_invocation/  # Agent 的 ainvoke 异步调用示例
+│   ├── streaming/    # Agent 流式执行与 stream_mode 示例
 │   ├── agent_structured_output/  # Agent 结构化输出与错误处理示例
 │   ├── tool_creation/  # @tool、Pydantic 和 JSON Schema 工具示例
 │   └── tool_call_error_handling/  # Agent 工具调用异常处理示例
@@ -66,6 +67,7 @@ python -m models.basics.blocking_call
 python -m models.basics.stream_output
 python -m agents.basics.05_agent_dynamic_prompt
 python -m agents.async_invocation.01_basic_ainvoke
+python -m agents.streaming.01_stream_updates
 python -m agents.agent_structured_output.01_pydantic_schema
 python -m agents.tool_creation.01_create_tool
 python -m agents.tool_call_error_handling.01_generic_tool_error_handler
@@ -145,6 +147,25 @@ python -m agents.agent_structured_output.08_tool_strategy_custom_error_handler
 
 ```bash
 python -m agents.async_invocation.01_basic_ainvoke
+```
+
+### Agent 流式执行
+
+`agents/streaming/` 演示使用 `agent.stream()` 查看 Agent 执行过程。当前示例通过
+`stream_mode="updates"` 逐步输出模型节点和工具节点写入的消息，并说明流模式与
+检查点持久化的职责区别；同时演示 `stream_mode="checkpoints"` 输出状态快照，
+使用固定 `thread_id` 延续同一会话，以及通过 `stream_mode="messages"`
+实时接收模型消息片段。其他示例分别展示完整状态、任务生命周期、调试事件，
+以及工具内部主动发送的自定义进度事件。
+
+```bash
+python -m agents.streaming.01_stream_updates
+python -m agents.streaming.02_stream_checkpoints
+python -m agents.streaming.03_stream_messages
+python -m agents.streaming.04_stream_values
+python -m agents.streaming.05_stream_tasks
+python -m agents.streaming.06_stream_debug
+python -m agents.streaming.07_stream_custom
 ```
 
 ### Agent 工具创建
