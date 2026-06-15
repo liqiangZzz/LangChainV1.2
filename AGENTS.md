@@ -1,92 +1,83 @@
 # AGENTS.md
 
-本文件是本项目的协作说明。所有自动化编程助手在本仓库中工作时，都应优先遵循这里的约定。
+本文件定义自动化编程助手在本仓库中的协作约定。项目使用说明和学习内容放在
+`README.md` 与各包的 `__init__.py` 中，不在这里重复维护。
 
-## 项目概览
+## 项目定位
 
-这是一个 LangChain 学习与示例项目，主要演示模型调用、流式输出、异步调用、批处理、工具调用、结构化输出等能力。
+这是一个 LangChain 学习与示例项目，主要使用 DeepSeek 演示模型调用、Agent、
+工具调用、结构化输出、middleware、流式处理、批处理和异步调用。
 
-主要文件和目录：
+主要目录与入口：
 
-- `quick_start.py`：Agent 快速示例入口。
-- `my_llm.py`：统一创建 DeepSeek Chat 模型实例。
-- `env_utils.py`：加载 `.env` 并导出 API 相关环境变量。
-- `models/`：按主题组织的 LangChain 示例脚本。
+- `agents/`：Agent 基础能力及相关专题示例。
+- `models/`：聊天模型调用及相关专题示例。
+- `quick_start.py`：Agent 快速开始入口。
+- `my_llm.py`：项目共享模型实例。
+- `env_utils.py`：加载并导出模型服务所需环境变量。
+- `docs/skills/`：项目文档维护 Skill。
+- `scripts/`：只读审计脚本。
 
-## 默认沟通方式
+## 协作方式
 
 - 默认使用中文回答。
-- 需求明确时直接修改代码，不只给方案。
-- 如果信息不足且会影响实现结果，先简短提问。
-- 完成后说明改了什么、如何验证、是否还有风险或未完成项。
+- 需求明确时直接执行；缺少关键信息且会影响结果时再简短提问。
+- 修改前先了解相关目录、现有代码风格和 `git status --short`。
+- 保持改动范围小，不重构、删除或回滚与当前任务无关的内容。
+- 完成后说明实际修改、验证结果以及仍存在的风险或未完成项。
 
-## 代码风格
+## 代码与命名
 
-- 使用 Python 编写示例，遵循当前项目的简洁脚本风格。
-- 文件、函数、变量命名尽量贴合现有目录和示例命名习惯。
-- Python 包、模块、函数和变量使用 `lower_snake_case`，类名使用 `PascalCase`。
-- 按学习顺序组织的示例文件统一使用 `NN_topic_name.py`，例如
+- 使用 Python 编写示例，保持代码清晰、可直接阅读和运行。
+- 包、模块、函数和变量使用 `lower_snake_case`，类名使用 `PascalCase`。
+- 按学习顺序组织的示例使用 `NN_topic_name.py`，例如
   `03_model_invocation_config.py`。
-- 缩写也作为独立单词处理，例如使用 `json_schema`、`tool_strategy`，
-  避免 `jsonschema`、`toolstrategy` 等粘连写法。
+- 复合词和缩写使用下划线分隔，例如 `json_schema`、`tool_strategy`。
 - 示例说明、注释和文档字符串优先使用中文。
-- 复杂逻辑可以添加简短注释；不要添加解释显而易见代码的空洞注释。
-- 保持改动范围小，不做与当前任务无关的重构。
-- 不随意移动、重命名或删除已有示例文件，除非用户明确要求。
-- 重命名已有模块时，必须同步更新 README、`__init__.py`、运行命令和代码引用。
+- 只为复杂或容易误解的逻辑添加必要注释，不解释显而易见的代码。
+- 重命名模块或包时，同步更新代码引用、`__init__.py`、README 和运行命令。
 
-## LangChain 约定
+## LangChain 示例约定
 
-- 复用 `my_llm.py` 中的 `deepseek_llm`，避免在示例文件里重复创建模型实例。
-- 环境变量统一从 `env_utils.py` 读取，不在代码中硬编码 API Key、Base URL、Token、密码等敏感信息。
-- 新增示例时优先放在 `models/` 下对应主题目录；如果是新主题，可以新建清晰命名的子目录。
-- 示例脚本应尽量可直接运行，并保留必要的 `print` 输出，方便学习和调试。
-- 涉及真实模型调用时，注意这会消耗外部 API 额度；执行前确认 `.env` 配置是否存在即可，不要打印密钥内容。
+- Agent 示例放在 `agents/` 的对应主题包中，模型示例放在 `models/` 中。
+- 优先复用 `my_llm.py` 的共享模型；只有演示初始化方式或特殊模型配置时，
+  才在示例中单独创建模型。
+- 环境变量统一从 `env_utils.py` 读取，不硬编码 API Key、Token、密码或服务地址。
+- 示例应保留必要的输出，方便观察消息、工具调用和结构化结果。
+- 很多脚本在模块顶层调用真实模型。不要为了检查导入而直接导入具体示例模块；
+  可以安全导入只包含说明的包级 `__init__.py`。
+- 执行真实模型、推理模型、联网或多轮 Agent 示例前，注意 API 额度、网络和环境配置，
+  且不得打印敏感信息。
 
-## 包说明维护 Skill
+## 文档维护
 
-- 维护 Python 包的 `__init__.py` 说明时，优先参考项目内 skill：`docs/skills/package-init-doc-maintainer/SKILL.md`。
-- 该 skill 会进一步引用 `docs/skills/package-init-doc-maintainer/references/package-init-doc-guide.md` 作为当前项目的包说明维护细则。
-- 该文档只描述当前已有代码承载的知识点；尚未写成代码的技术点不要提前写成完整闭环。
-- 维护 `__init__.py` 包说明时，先运行 `python scripts/audit_init_docs.py`，再按扫描结果决定是否调整。
-- `__init__.py` 只写包级说明，不导入示例模块，避免 import 包时触发真实 LLM 调用。
+- `__init__.py` 只维护包级导航和运行风险，不导入示例模块。
+- 维护包说明时使用 `docs/skills/package-init-doc-maintainer/SKILL.md`，
+  并先运行 `python scripts/audit_init_docs.py`。
+- 维护根目录 README 时使用 `docs/skills/project-readme-maintainer/SKILL.md`，
+  并先运行 `python scripts/audit_project_readme.py`。
+- 文档只描述仓库中已经存在的代码；README 已存在时进行增量更新。
+- 新建包后先维护该包及上级包的 `__init__.py`，再判断 README 是否需要更新。
+- `AGENTS.md` 只保存长期有效的项目级规则，普通模块清单和学习细节不写入本文件。
 
-## README 维护 Skill
+## 验证
 
-- 创建或维护根目录 `README.md` 时，优先参考项目内 skill：`docs/skills/project-readme-maintainer/SKILL.md`。
-- README 只描述当前已有代码、目录和文档，不提前写尚未实现的技术点。
-- README 已存在时优先增量维护，只更新与当前代码变化相关的小节，不默认重写整份文档。
-- 维护 README 前先运行 `python scripts/audit_project_readme.py`，再按扫描结果决定是否调整。
-- README 面向项目使用者和学习者；包级细节应放在对应 `__init__.py` 中。
+根据改动范围选择最小有效验证：
 
-## 新增模块后的文档流程
+- 单文件语法检查：`python -m py_compile <file>`
+- 包或目录语法检查：`python -m compileall -q <path>`
+- 包说明审计：`python scripts/audit_init_docs.py`
+- README 审计：`python scripts/audit_project_readme.py`
+- 格式问题检查：`git diff --check`
 
-- 新建 Python 包后，先运行 `python scripts/audit_init_docs.py` 查看包说明状态。
-- 先维护新包的 `__init__.py`，再检查上级包的 `__init__.py` 是否需要增加子包导航。
-- 再运行 `python scripts/audit_project_readme.py`，判断根目录 `README.md`
-  是否需要补充目录结构、学习模块或运行命令。
-- `AGENTS.md` 只维护项目级协作规则；普通新增模块不需要写入本文件。
+不要仅为验证而运行会产生真实 API 请求的示例。若确需运行，应说明额度消耗；
+如果受依赖、网络或环境变量限制无法验证，也要明确说明。
 
-## 安全边界
+## 安全与 Git
 
-- 不泄露 `.env`、API Key、Token、密码等敏感信息。
-- 不执行破坏性命令，例如删除文件、重置 Git、清空目录、覆盖重要配置，除非用户明确授权。
-- 不回滚或覆盖用户已有改动。若发现工作区有未提交修改，只处理当前任务相关文件。
-- 涉及依赖安装、外部网络访问、线上部署或登录外部服务时，先说明当前限制并按需请求授权。
-
-## 验证建议
-
-根据改动类型选择最小有效验证：
-
-- 语法检查：`python -m py_compile <file>`
-- 运行单个示例：`python <script.py>`
-- 批量检查 Python 文件：`python -m compileall .`
-
-如果运行示例会触发真实 LLM 调用，应在结果中说明这一点；如果因为缺少依赖、网络或环境变量无法验证，也要明确说明。
-
-## Git 协作
-
-- 开始修改前先查看 `git status --short`。
+- 不泄露或提交 `.env`、API Key、Token、密码等敏感信息。
+- 未经明确授权，不执行删除目录、重置 Git、覆盖配置等破坏性操作。
+- 不覆盖用户已有改动，只处理当前任务相关文件。
+- 依赖安装、外部网络访问、线上部署或外部服务登录按需说明并请求授权。
 - 不主动提交、推送或创建分支，除非用户明确要求。
 - 不处理与当前任务无关的未提交文件。
-- 最终回复中列出本次实际改动的文件。
