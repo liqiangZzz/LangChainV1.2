@@ -19,6 +19,7 @@
 .
 ├── agents/           # LangChain Agent 与工具创建示例
 │   ├── basics/       # Agent 创建、调用、提示词与 middleware 示例
+│   ├── async_invocation/  # Agent 的 ainvoke 异步调用示例
 │   ├── agent_structured_output/  # Agent 结构化输出与错误处理示例
 │   ├── tool_creation/  # @tool、Pydantic 和 JSON Schema 工具示例
 │   └── tool_call_error_handling/  # Agent 工具调用异常处理示例
@@ -64,6 +65,7 @@ python quick_start.py
 python -m models.basics.blocking_call
 python -m models.basics.stream_output
 python -m agents.basics.05_agent_dynamic_prompt
+python -m agents.async_invocation.01_basic_ainvoke
 python -m agents.agent_structured_output.01_pydantic_schema
 python -m agents.tool_creation.01_create_tool
 python -m agents.tool_call_error_handling.01_generic_tool_error_handler
@@ -134,6 +136,15 @@ python -m agents.agent_structured_output.01_pydantic_schema
 python -m agents.agent_structured_output.06_tool_strategy_error_handling
 python -m agents.agent_structured_output.07_combined_structured_output
 python -m agents.agent_structured_output.08_tool_strategy_custom_error_handler
+```
+
+### Agent 异步调用
+
+`agents/async_invocation/` 演示在异步函数中使用 `await agent.ainvoke(...)`
+调用 Agent。当前示例通过旅行规划场景组合天气、交通和景点工具，并返回完整消息历史。
+
+```bash
+python -m agents.async_invocation.01_basic_ainvoke
 ```
 
 ### Agent 工具创建

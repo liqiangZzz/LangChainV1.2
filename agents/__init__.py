@@ -9,6 +9,9 @@ LangChain Agent 示例包。
 - basics
   演示 Agent 创建、invoke、系统提示词、动态提示词和模型调用 middleware。
 
+- async_invocation
+  演示使用 ainvoke 在异步函数中调用 Agent，并获取完整消息历史。
+
 - tool_creation
   演示使用 @tool、Pydantic 模型和 JSON Schema 创建 Agent 工具。
 
