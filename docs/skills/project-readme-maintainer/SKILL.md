@@ -45,7 +45,7 @@ python scripts/audit_project_readme.py
    - `README.md`，如果存在
    - `AGENTS.md`
    - 顶层入口脚本，例如 `quick_start.py`、`my_llm.py`、`env_utils.py`
-   - 主要目录说明，例如 `models/__init__.py`、`agent_part/__init__.py`
+   - 主要目录说明，例如 `models/__init__.py`、`agents/__init__.py`
    - 必要时读取更深层 `__init__.py`
 
 4. 新增模块时，先确认对应 `__init__.py` 已经维护，再根据包说明增量更新 README：

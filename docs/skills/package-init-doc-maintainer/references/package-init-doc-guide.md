@@ -23,7 +23,7 @@
 
 原因：
 
-- 这套规则强依赖本项目结构，例如 `models/`、`agent_part/`、`my_llm.py`、`.env` 约定。
+- 这套规则强依赖本项目结构，例如 `models/`、`agents/`、`my_llm.py`、`.env` 约定。
 - 项目内文档会跟随仓库一起变化，更适合记录当前已经落地的代码事实和命名历史。
 - 规则只针对包级 `__init__.py` 说明，不应该命名成整个项目文档维护器。
 - 不会影响你其他项目，避免把 LangChainV1.2 的局部约定污染成全局习惯。
@@ -75,7 +75,7 @@
 4. 修改 `__init__.py` 时只写包级说明，不导入示例模块。
 
    原因：本项目很多示例在模块顶层会调用真实 LLM。若在 `__init__.py` 中导入这些模块，
-   可能导致 `import models` 或 `import agent_part` 时直接触发 API 调用。
+   可能导致 `import models` 或 `import agents` 时直接触发 API 调用。
 
 5. 修改后执行最小验证：
 
@@ -137,17 +137,17 @@
 
 ## 当前已落地范围
 
-- `agent_part/`
+- `agents/`
   当前已有 Agent 创建、invoke、prompt、middleware、dynamic_prompt 相关示例。
 
 - `models/`
   当前已有模型基础调用、流式输出、异步调用、批处理、工具调用、结构化输出和部分高级配置示例。
 
-- `models/model_tool_calling/`
+- `models/tool_calling/`
   当前已有手动工具调用流程示例，重点是 `bind_tools`、`tool_calls`、`ToolMessage`。
 
-- `models/model_other/`
+- `models/advanced_features/`
   当前已有推理模型、限流、运行配置和 callback 示例，注意推理模型成本。
 
-- `models/model_strcutured_optput/`
-  当前已有结构化输出示例；目录名保留项目现状，实际含义是 structured output。
+- `models/structured_output/`
+  当前已有 Pydantic、TypedDict、JSON Schema 和 JsonOutputParser 结构化输出示例。

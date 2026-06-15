@@ -24,10 +24,16 @@
 
 - 使用 Python 编写示例，遵循当前项目的简洁脚本风格。
 - 文件、函数、变量命名尽量贴合现有目录和示例命名习惯。
+- Python 包、模块、函数和变量使用 `lower_snake_case`，类名使用 `PascalCase`。
+- 按学习顺序组织的示例文件统一使用 `NN_topic_name.py`，例如
+  `03_model_invocation_config.py`。
+- 缩写也作为独立单词处理，例如使用 `json_schema`、`tool_strategy`，
+  避免 `jsonschema`、`toolstrategy` 等粘连写法。
 - 示例说明、注释和文档字符串优先使用中文。
 - 复杂逻辑可以添加简短注释；不要添加解释显而易见代码的空洞注释。
 - 保持改动范围小，不做与当前任务无关的重构。
 - 不随意移动、重命名或删除已有示例文件，除非用户明确要求。
+- 重命名已有模块时，必须同步更新 README、`__init__.py`、运行命令和代码引用。
 
 ## LangChain 约定
 

@@ -13,7 +13,7 @@ description: Use this project-local skill when maintaining Python package __init
 - 只描述当前仓库里已经存在的代码、目录和示例。
 - 不把尚未写成代码的技术点提前写成完整文档。
 - 如果发现某个知识点还没有示例代码，只能标记为“待补充”或暂不写入。
-- 不在 `__init__.py` 中导入示例模块，避免 `import models` 或 `import agent_part` 时触发真实 LLM 调用。
+- 不在 `__init__.py` 中导入示例模块，避免 `import models` 或 `import agents` 时触发真实 LLM 调用。
 - 涉及真实模型调用、推理模型、联网、额度消耗时，必须提醒。
 
 ## 使用流程

@@ -67,7 +67,7 @@ def main() -> None:
     print("  - AGENTS.md")
     if readme.exists():
         print("  - README.md")
-    print("  - agent_part/__init__.py")
+    print("  - agents/__init__.py")
     print("  - models/__init__.py")
 
 

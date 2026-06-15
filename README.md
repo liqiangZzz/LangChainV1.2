@@ -17,9 +17,13 @@
 
 ```text
 .
-├── agent_part/       # LangChain Agent 与工具创建示例
-│   └── create_tool/  # @tool、Pydantic 和 JSON Schema 工具示例
+├── agents/           # LangChain Agent 与工具创建示例
+│   ├── basics/       # Agent 创建、调用、提示词与 middleware 示例
+│   ├── agent_structured_output/  # Agent 结构化输出与错误处理示例
+│   ├── tool_creation/  # @tool、Pydantic 和 JSON Schema 工具示例
+│   └── tool_call_error_handling/  # Agent 工具调用异常处理示例
 ├── models/           # 聊天模型能力示例
+│   ├── basics/       # 同步、流式、批处理和异步调用示例
 ├── docs/skills/      # 项目文档维护 skill
 ├── scripts/          # 文档审计与维护辅助脚本
 ├── env_utils.py      # 加载 DeepSeek 环境变量
@@ -57,19 +61,21 @@ python quick_start.py
 也可以按模块运行其他示例，例如：
 
 ```bash
-python -m models.block_call
-python -m models.stream_output
-python -m agent_part.05_agent_dynamic_prompt
-python -m agent_part.create_tool.01_create_tool
+python -m models.basics.blocking_call
+python -m models.basics.stream_output
+python -m agents.basics.05_agent_dynamic_prompt
+python -m agents.agent_structured_output.01_pydantic_schema
+python -m agents.tool_creation.01_create_tool
+python -m agents.tool_call_error_handling.01_generic_tool_error_handler
 ```
 
 ## 学习模块
 
 ### 模型基础能力
 
-`models/` 包含聊天模型的基础调用示例：
+`models/basics/` 包含聊天模型的基础调用示例：
 
-- `block_call.py`：同步阻塞调用
+- `blocking_call.py`：同步阻塞调用
 - `stream_output.py`：同步流式输出
 - `batch_process.py`：同步批处理
 - `async_call.py`：异步调用
@@ -78,34 +84,31 @@ python -m agent_part.create_tool.01_create_tool
 
 ### 模型初始化
 
-- `models/initchatmodel/`：使用 `init_chat_model` 统一入口初始化模型
-- `models/modelclass/`：使用 `ChatDeepSeek`、`ChatOpenAI` 等具体模型类初始化模型
+- `models/init_chat_model/`：使用 `init_chat_model` 统一入口初始化模型
+- `models/model_classes/`：使用 `ChatDeepSeek`、`ChatOpenAI` 等具体模型类初始化模型
 
 ### 工具调用
 
-`models/model_tool_calling/` 演示 `bind_tools`、`tool_calls` 和 `ToolMessage` 的使用，
+`models/tool_calling/` 演示 `bind_tools`、`tool_calls` 和 `ToolMessage` 的使用，
 以及如何手动处理单工具和多工具调用流程。
 
 ### 结构化输出
 
-`models/model_strcutured_optput/` 演示以下结构化输出方式：
+`models/structured_output/` 演示以下结构化输出方式：
 
 - Pydantic 模型
 - TypedDict
 - JSON Schema
 - `JsonOutputParser`
 
-目录名 `model_strcutured_optput` 保留项目现有命名，实际含义为
-`model_structured_output`。
-
 ### 模型高级能力
 
-`models/model_other/` 包含推理模型、内存限流、回调、运行时配置和
+`models/advanced_features/` 包含推理模型、内存限流、回调、运行时配置和
 `configurable_fields` 等示例。
 
 ### Agent
 
-`agent_part/` 中的示例按文件编号组织，主要包括：
+`agents/basics/` 中的示例按文件编号组织，主要包括：
 
 - 创建静态模型 Agent
 - 使用 middleware 包装模型调用
@@ -113,9 +116,29 @@ python -m agent_part.create_tool.01_create_tool
 - 配置字符串或 `SystemMessage` 系统提示词
 - 根据运行时 context 动态生成系统提示词
 
+### Agent 结构化输出
+
+`agents/agent_structured_output/` 演示通过 `response_format` 和 `ToolStrategy`
+约束 Agent 的最终输出，主要包括：
+
+- 使用 Pydantic、dataclass、TypedDict 和 JSON Schema 定义输出结构
+- 通过 `tool_message_content` 自定义结构化输出成功消息
+- 使用 `handle_errors` 配置默认重试、固定错误提示或关闭重试
+- 对比 `Union` 二选一与嵌套组合模型同时返回多类信息
+- 使用自定义错误处理函数区分校验错误和多结构输出错误
+
+可以从项目根目录按模块运行：
+
+```bash
+python -m agents.agent_structured_output.01_pydantic_schema
+python -m agents.agent_structured_output.06_tool_strategy_error_handling
+python -m agents.agent_structured_output.07_combined_structured_output
+python -m agents.agent_structured_output.08_tool_strategy_custom_error_handler
+```
+
 ### Agent 工具创建
 
-`agent_part/create_tool/` 演示三种 Agent 工具创建方式：
+`agents/tool_creation/` 演示三种 Agent 工具创建方式：
 
 - `01_create_tool.py`：使用 `@tool` 装饰器和函数签名创建工具
 - `02_create_pydantic_tool.py`：使用 Pydantic 模型定义强类型参数和字段校验
@@ -124,16 +147,35 @@ python -m agent_part.create_tool.01_create_tool
 可以从项目根目录按模块运行：
 
 ```bash
-python -m agent_part.create_tool.01_create_tool
-python -m agent_part.create_tool.02_create_pydantic_tool
-python -m agent_part.create_tool.03_create_schema_tool
+python -m agents.tool_creation.01_create_tool
+python -m agents.tool_creation.02_create_pydantic_tool
+python -m agents.tool_creation.03_create_schema_tool
+```
+
+### Agent 工具异常处理
+
+`agents/tool_call_error_handling/` 演示使用 `wrap_tool_call` middleware
+统一处理 Agent 工具执行异常：
+
+- `01_generic_tool_error_handler.py`：捕获外部股票服务异常并返回统一的 `ToolMessage`
+- `02_exception_specific_tool_error_handler.py`：分别处理连接失败、权限不足、
+  业务校验和未知异常
+
+可以从项目根目录按模块运行：
+
+```bash
+python -m agents.tool_call_error_handling.01_generic_tool_error_handler
+python -m agents.tool_call_error_handling.02_exception_specific_tool_error_handler
 ```
 
 ## 运行注意事项
 
 - 多数示例会调用真实 DeepSeek 模型并消耗 API 额度。
 - Agent 和工具调用可能触发多轮模型请求，调用次数与 token 消耗会相应增加。
-- `models/model_other/01_model_reasoner.py` 默认调用 `deepseek-reasoner`，推理模型通常比
+- Agent 结构化输出发生 Schema 校验错误并自动重试时，也会增加模型调用次数。
+- `tool_call_error_handling/01_generic_tool_error_handler.py` 会访问模拟失败的外部接口；
+  `02_exception_specific_tool_error_handler.py` 包含随机异常，因此重复运行的结果可能不同。
+- `models/advanced_features/01_model_reasoner.py` 默认调用 `deepseek-reasoner`，推理模型通常比
   `deepseek-chat` 成本更高。
 - 请从项目根目录运行脚本或使用 `python -m <模块路径>`，以确保可以正确导入
   `my_llm.py`。
@@ -166,6 +208,6 @@ docs/skills/project-readme-maintainer/
 在 Codex 中可以直接提出：
 
 ```text
-使用 package-init-doc-maintainer 更新 create_tool 的 __init__.py
+使用 package-init-doc-maintainer 更新 tool_creation 的 __init__.py
 使用 project-readme-maintainer 根据当前代码更新 README.md
 ```
