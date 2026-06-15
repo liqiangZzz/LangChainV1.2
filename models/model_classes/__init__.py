@@ -6,12 +6,12 @@
 
 主要文件：
 
-- class_llm.py
+- model_instances.py
   创建两个模型实例：
   deepseek_llm 使用 ChatDeepSeek；
   deepseek_llm2 使用 ChatOpenAI，并通过 DeepSeek 的 base_url 访问 DeepSeek 模型。
 
-- init_model.py
+- invoke_model.py
   导入已创建好的模型实例并发起一次 invoke 调用，用于验证模型连接和基础对话。
 
 特点：
@@ -20,8 +20,14 @@
 - ChatOpenAI 可用于调用兼容 OpenAI API 格式的 DeepSeek 服务。
 - 适合理解不同模型类的初始化差异。
 
-和 initchatmodel 的区别：
+和 init_chat_model 包的区别：
 
 - init_chat_model 是统一入口，适合快速切换不同 provider。
 - 具体模型类写法更显式，适合需要了解底层类和参数的学习场景。
+
+运行注意事项：
+
+- invoke_model.py 会调用真实 DeepSeek 模型并消耗 API 额度。
+- ChatOpenAI 示例使用 DeepSeek 的 OpenAI 兼容接口，并不代表调用 OpenAI 模型。
+- 本包的 __init__.py 只提供说明，不导入示例模块，避免 import 包时触发模型调用。
 """
