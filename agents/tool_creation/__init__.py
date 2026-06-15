@@ -29,9 +29,9 @@ Agent 工具创建示例包。
 运行方式：
 
 - 请从项目根目录使用模块方式运行，例如：
-  python -m agent_part.create_tool.01_create_tool
-  python -m agent_part.create_tool.02_create_pydantic_tool
-  python -m agent_part.create_tool.03_create_schema_tool
+  python -m agents.tool_creation.01_create_tool
+  python -m agents.tool_creation.02_create_pydantic_tool
+  python -m agents.tool_creation.03_create_schema_tool
 
 运行注意事项：
 
