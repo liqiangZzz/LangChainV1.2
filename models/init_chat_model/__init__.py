@@ -9,12 +9,18 @@ init_chat_model 初始化示例包。
 - init_chat_model_llm.py
   使用 init_chat_model 创建 deepseek_llm，并配置 API Key、Base URL 和 model_provider。
 
-- init_mode.py
+- invoke_model.py
   导入 deepseek_llm 并发起一次 invoke 调用，用于验证模型是否可用。
 
 特点：
 
 - 入口统一，适合快速切换不同模型提供商。
 - 配置较简洁，适合学习和原型示例。
-- 和 modelclass 包形成对比：一个使用统一工厂函数，一个使用具体模型类。
+- 和 model_classes 包形成对比：一个使用统一工厂函数，一个使用具体模型类。
+
+运行注意事项：
+
+- invoke_model.py 会调用真实 DeepSeek 模型并消耗 API 额度。
+- 运行前需要确认 .env 中已配置 DeepSeek API 信息。
+- 本包的 __init__.py 只提供说明，不导入示例模块，避免 import 包时触发模型调用。
 """
