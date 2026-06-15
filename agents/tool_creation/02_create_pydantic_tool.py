@@ -12,7 +12,7 @@ from langchain_core.messages import SystemMessage
 from langchain_core.tools import tool
 from pydantic import BaseModel, Field, field_validator
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 class TicketQueryInput(BaseModel):

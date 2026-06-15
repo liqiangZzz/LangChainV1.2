@@ -19,7 +19,7 @@ deepseek_llm = init_chat_model(
     model="deepseek-chat",
     model_provider="deepseek",
     api_key=DEEPSEEK_API_KEY,
-    base_url=DEEPSEEK_BASE_URL
+    api_base=DEEPSEEK_BASE_URL,
 )
 
 agent = create_agent(

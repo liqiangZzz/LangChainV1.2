@@ -1,8 +1,8 @@
 """演示只有一个大模型时，如何创建“动态模型”智能体。
 
 动态模型 middleware 的核心作用，是在每次调用模型前根据当前对话状态选择模型。
-当前项目只有 ``deepseek-chat``，因此本示例不会切换模型厂商或使用更贵的推理模型，
-而是为同一个模型准备“快速回答”和“严谨分析”两组配置，再动态选择其中一组。
+当前项目只复用一个公共 DeepSeek 模型，因此本示例不会切换模型厂商或使用更贵的
+推理模型，而是为同一个模型准备“快速回答”和“严谨分析”两组配置，再动态选择。
 
 Agent 调用工具前后都会请求模型，所以该 middleware 在一次 invoke 中可能执行多次。
 """
@@ -11,11 +11,12 @@ from langchain.agents import create_agent
 from langchain.agents.middleware import ModelRequest, ModelResponse, wrap_model_call
 from langchain.tools import tool
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
-# 两个对象仍然使用 deepseek-chat，只是生成参数不同。
-# model_copy 不会修改 my_llm.py 中共享的 deepseek_llm，避免影响其他示例。
+# 两个对象仍然使用公共模型的模型名称，只是生成参数不同。
+# model_copy 不会修改 init_chat_model_llm.py 中共享的 deepseek_llm，
+# 因此不会影响其他示例。
 FAST_MODEL = deepseek_llm.model_copy(
     update={
         "temperature": 0.7,
@@ -81,7 +82,7 @@ def is_complex_request(messages: list) -> bool:
 
 @wrap_model_call
 def dynamic_model_selection(request: ModelRequest, handler) -> ModelResponse:
-    """在每次模型调用前，动态选择 deepseek-chat 的运行配置。"""
+    """在每次模型调用前，动态选择公共 DeepSeek 模型的运行配置。"""
     messages = request.state["messages"]
 
     if is_complex_request(messages):
@@ -92,7 +93,7 @@ def dynamic_model_selection(request: ModelRequest, handler) -> ModelResponse:
         strategy_name = "快速回答"
 
     print(
-        f"[动态模型] 使用 deepseek-chat / {strategy_name}策略，"
+        f"[动态模型] 使用 {selected_model.model_name} / {strategy_name}策略，"
         f"当前消息数：{len(messages)}"
     )
 

@@ -44,7 +44,8 @@ python scripts/audit_project_readme.py
 
    - `README.md`，如果存在
    - `AGENTS.md`
-   - 顶层入口脚本，例如 `quick_start.py`、`my_llm.py`、`env_utils.py`
+   - 公共入口脚本，例如 `quick_start.py`、`env_utils.py`、
+     `models/init_chat_model/init_chat_model_llm.py`
    - 主要目录说明，例如 `models/__init__.py`、`agents/__init__.py`
    - 必要时读取更深层 `__init__.py`
 

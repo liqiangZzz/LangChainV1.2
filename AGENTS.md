@@ -13,7 +13,8 @@
 - `agents/`：Agent 基础能力及相关专题示例。
 - `models/`：聊天模型调用及相关专题示例。
 - `quick_start.py`：Agent 快速开始入口。
-- `my_llm.py`：项目共享模型实例。
+- `models/init_chat_model/init_chat_model_llm.py`：使用 `init_chat_model`
+  创建项目共享的 DeepSeek 模型实例。
 - `env_utils.py`：加载并导出模型服务所需环境变量。
 - `docs/skills/`：项目文档维护 Skill。
 - `scripts/`：只读审计脚本。
@@ -40,8 +41,8 @@
 ## LangChain 示例约定
 
 - Agent 示例放在 `agents/` 的对应主题包中，模型示例放在 `models/` 中。
-- 优先复用 `my_llm.py` 的共享模型；只有演示初始化方式或特殊模型配置时，
-  才在示例中单独创建模型。
+- 优先复用 `models/init_chat_model/init_chat_model_llm.py` 中的共享模型；
+  只有演示初始化方式或特殊模型配置时，才在示例中单独创建模型。
 - 环境变量统一从 `env_utils.py` 读取，不硬编码 API Key、Token、密码或服务地址。
 - 示例应保留必要的输出，方便观察消息、工具调用和结构化结果。
 - 很多脚本在模块顶层调用真实模型。不要为了检查导入而直接导入具体示例模块；

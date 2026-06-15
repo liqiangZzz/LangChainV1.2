@@ -1,7 +1,7 @@
 """
 流式输出
 """
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 # 流式输出
 print("AI 回答：", end="", flush=True)

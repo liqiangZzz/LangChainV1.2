@@ -13,7 +13,7 @@ from langchain_core.tools import tool
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph.state import CompiledStateGraph
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 @tool

@@ -23,7 +23,8 @@
 
 原因：
 
-- 这套规则强依赖本项目结构，例如 `models/`、`agents/`、`my_llm.py`、`.env` 约定。
+- 这套规则强依赖本项目结构，例如 `models/`、`agents/`、
+  `models/init_chat_model/init_chat_model_llm.py`、`.env` 约定。
 - 项目内文档会跟随仓库一起变化，更适合记录当前已经落地的代码事实和命名历史。
 - 规则只针对包级 `__init__.py` 说明，不应该命名成整个项目文档维护器。
 - 不会影响你其他项目，避免把 LangChainV1.2 的局部约定污染成全局习惯。

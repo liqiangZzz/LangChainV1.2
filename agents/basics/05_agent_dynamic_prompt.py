@@ -16,7 +16,7 @@ from langchain.agents import create_agent
 from langchain.agents.middleware import ModelRequest, dynamic_prompt
 from langchain.tools import tool
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 # 模拟订单数据库。真实项目里通常会换成数据库/API 查询。

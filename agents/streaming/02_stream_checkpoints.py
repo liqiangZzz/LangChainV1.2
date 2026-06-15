@@ -7,7 +7,7 @@ InMemorySaver 是内存版 checkpointer，适合演示短期会话记忆。
 from langchain.agents import create_agent
 from langgraph.checkpoint.memory import InMemorySaver
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 def main() -> None:

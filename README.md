@@ -10,8 +10,9 @@
 - Pydantic、TypedDict、JSON Schema 等结构化输出
 - 静态提示词、动态提示词和 Agent middleware
 
-项目中的示例以可直接运行的 Python 脚本为主，公共 DeepSeek 模型实例统一定义在
-`my_llm.py` 中。
+项目中的示例以可直接运行的 Python 脚本为主。公共 DeepSeek 模型实例通过
+LangChain 的 `init_chat_model` 统一入口创建，并集中定义在
+`models/init_chat_model/init_chat_model_llm.py` 中。
 
 ## 目录结构
 
@@ -26,10 +27,10 @@
 │   └── tool_call_error_handling/  # Agent 工具调用异常处理示例
 ├── models/           # 聊天模型能力示例
 │   ├── basics/       # 同步、流式、批处理和异步调用示例
+│   ├── init_chat_model/  # 公共模型实例与统一初始化入口示例
 ├── docs/skills/      # 项目文档维护 skill
 ├── scripts/          # 文档审计与维护辅助脚本
 ├── env_utils.py      # 加载 DeepSeek 环境变量
-├── my_llm.py         # 公共 DeepSeek Chat 模型实例
 └── quick_start.py    # Agent 快速开始示例
 ```
 
@@ -88,7 +89,8 @@ python -m agents.tool_call_error_handling.01_generic_tool_error_handler
 
 ### 模型初始化
 
-- `models/init_chat_model/`：使用 `init_chat_model` 统一入口初始化模型
+- `models/init_chat_model/`：使用 `init_chat_model` 统一入口创建项目共享模型，
+  其他普通示例复用该目录中的 `deepseek_llm`
 - `models/model_classes/`：使用 `ChatDeepSeek`、`ChatOpenAI` 等具体模型类初始化模型
 
 ### 工具调用
@@ -210,7 +212,7 @@ python -m agents.tool_call_error_handling.02_exception_specific_tool_error_handl
 - `models/advanced_features/01_model_reasoner.py` 默认调用 `deepseek-reasoner`，推理模型通常比
   `deepseek-chat` 成本更高。
 - 请从项目根目录运行脚本或使用 `python -m <模块路径>`，以确保可以正确导入
-  `my_llm.py`。
+  `models.init_chat_model.init_chat_model_llm`。
 - 示例中的天气、股票价格和新闻等工具返回模拟数据，不代表真实外部查询结果。
 
 ## 文档维护

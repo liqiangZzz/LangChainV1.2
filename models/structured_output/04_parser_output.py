@@ -10,7 +10,7 @@ from env_utils import DEEPSEEK_BASE_URL, DEEPSEEK_API_KEY
 # 初始化模型
 deepseek_llm = init_chat_model(
     api_key=DEEPSEEK_API_KEY,
-    base_url=DEEPSEEK_BASE_URL,
+    api_base=DEEPSEEK_BASE_URL,
     model="deepseek-chat",
     model_provider="deepseek",
 )

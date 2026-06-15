@@ -1,7 +1,7 @@
 """
 使用 JSON Schema 模型定义结构化输出
 """
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 # 返回嵌套结构
 # 使用 JSON Schema（最灵活，跨语言友好）

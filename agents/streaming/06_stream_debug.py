@@ -9,7 +9,7 @@ from typing import Any
 from langchain.agents import create_agent
 from langchain_core.tools import tool
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 @tool

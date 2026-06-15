@@ -20,7 +20,7 @@ from langchain_core.messages import ToolMessage
 from langchain_core.tools import ToolException, tool
 from langgraph.prebuilt.tool_node import ToolCallRequest
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 # 使用字典模拟工单数据库。示例中的查询和更新都只操作内存数据，

@@ -14,14 +14,14 @@ rate_limiter = InMemoryRateLimiter(
 )
 
 deepseek_llm = init_chat_model(
-    model='deepseek-chat',
+    model="deepseek-chat",
     model_provider="deepseek",
     api_key=DEEPSEEK_API_KEY,
-    base_url=DEEPSEEK_BASE_URL,
-    rate_limiter=rate_limiter  # 关键步骤
+    api_base=DEEPSEEK_BASE_URL,
+    rate_limiter=rate_limiter,  # 关键步骤
 )
 
 for i in range(3):
-    response = deepseek_llm.invoke('你好，你是谁？')
+    response = deepseek_llm.invoke("你好，你是谁？")
     print(response.content)
     print(time.time())  # 打印当前时间，用于查看请求间隔，返回时间单位为秒

@@ -4,7 +4,7 @@
 """
 from langchain_core.runnables.utils import Output
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 #  批量处理多个问题
 # responses:list[Output] = deepseek_llm.batch([

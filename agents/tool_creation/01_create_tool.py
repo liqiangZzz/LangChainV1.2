@@ -6,7 +6,7 @@ import json
 from langchain.agents import create_agent
 from langchain_core.tools import tool
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 @tool('get_employee_info', description='根据员工Id查询员工的详细信息，包括姓名、部门和职位')

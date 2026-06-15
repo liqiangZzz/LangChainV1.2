@@ -18,7 +18,7 @@ from langchain.agents.structured_output import (
 )
 from pydantic import BaseModel, Field
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 def custom_error_handler(error: Exception) -> str:

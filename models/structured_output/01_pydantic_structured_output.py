@@ -3,7 +3,7 @@ pydantic 模型返回结构化数据
 """
 from pydantic import BaseModel, Field
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 # 1. 定义嵌套的 Pydantic 模型

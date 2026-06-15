@@ -3,7 +3,7 @@
 """
 from typing import TypedDict, Annotated
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 class ActorTypedDict(TypedDict):

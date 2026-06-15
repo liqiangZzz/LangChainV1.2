@@ -1,6 +1,6 @@
 import asyncio
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 """
 异步调用

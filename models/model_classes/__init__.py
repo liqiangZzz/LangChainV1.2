@@ -8,7 +8,7 @@
 
 - model_instances.py
   创建两个模型实例：
-  deepseek_llm 使用 ChatDeepSeek；
+  deepseek_llm 使用 ChatDeepSeek，并通过 api_base 指定服务地址；
   deepseek_llm2 使用 ChatOpenAI，并通过 DeepSeek 的 base_url 访问 DeepSeek 模型。
 
 - invoke_model.py

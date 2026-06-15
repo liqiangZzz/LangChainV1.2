@@ -4,7 +4,7 @@
 """
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 # response = deepseek_llm.invoke("请用一句话介绍什么是人工智能")
 # print(response)

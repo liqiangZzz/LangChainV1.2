@@ -11,7 +11,7 @@ from langchain.agents import create_agent
 from langchain_core.messages import SystemMessage
 from langchain_core.tools import tool
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 # JSON Schema 的最外层类型是 object，表示工具接收一组键值参数。

@@ -10,7 +10,7 @@
 
 from langchain.agents import create_agent
 
-from my_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 def main() -> None:

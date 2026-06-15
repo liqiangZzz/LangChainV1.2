@@ -66,7 +66,7 @@ deepseek_llm = init_chat_model(
     model="deepseek-chat",
     model_provider="deepseek",
     api_key=DEEPSEEK_API_KEY,
-    base_url=DEEPSEEK_BASE_URL,
+    api_base=DEEPSEEK_BASE_URL,
     # 指定可调整参数
     # configurable_fields=("model",  "temperature", "max_tokens"),
 ).configurable_fields(  # <--- 这里用点(.)接上，效果和你写在参数里是一样的
