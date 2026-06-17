@@ -11,8 +11,8 @@ deepseek_llm = ChatDeepSeek(
 )
 
 
-deepseek_llm2 = ChatOpenAI(
-    api_key=DEEPSEEK_API_KEY,
-    base_url=DEEPSEEK_BASE_URL,
-    model="deepseek-chat",
-)
+# deepseek_llm2 = ChatOpenAI(
+#     api_key=DEEPSEEK_API_KEY,
+#     base_url=DEEPSEEK_BASE_URL,
+#     model="deepseek-chat",
+# )
