@@ -28,9 +28,10 @@ LangChain 的 `init_chat_model` 统一入口创建，并集中定义在
 ├── models/           # 聊天模型能力示例
 │   ├── basics/       # 同步、流式、批处理和异步调用示例
 │   ├── init_chat_model/  # 公共模型实例与统一初始化入口示例
+├── short_memory/     # Agent 短期记忆与 checkpoint 示例
 ├── docs/skills/      # 项目文档维护 skill
 ├── scripts/          # 文档审计与维护辅助脚本
-├── env_utils.py      # 加载 DeepSeek 环境变量
+├── env_utils.py      # 加载 DeepSeek 和 MySQL 环境变量
 └── quick_start.py    # Agent 快速开始示例
 ```
 
@@ -44,13 +45,26 @@ source .venv/bin/activate
 pip install langchain langchain-deepseek langchain-openai python-dotenv pydantic
 ```
 
+如果要运行 MySQL checkpoint 示例，还需要安装：
+
+```bash
+python -m pip install \
+  "langgraph-checkpoint-mysql[pymysql]==3.0.0" \
+  "PyMySQL[rsa]==1.1.2" \
+  "cryptography==46.0.3"
+```
+
 在项目根目录创建 `.env` 文件，并配置以下变量：
 
 ```dotenv
 DEEPSEEK_API_KEY=你的 API Key
 DEEPSEEK_BASE_URL=DeepSeek API Base URL
+
+# 仅运行 short_memory/03_short_memory_indb.py 时需要
+MYSQL_DATABASE_URL=mysql://langchain_user:你的密码@localhost:3306/langchain_db
 ```
 
+也可以复制 `.env.example` 后再填入真实值。
 请勿提交包含真实密钥的 `.env` 文件。
 
 ## 快速开始
@@ -202,6 +216,22 @@ python -m agents.tool_call_error_handling.01_generic_tool_error_handler
 python -m agents.tool_call_error_handling.02_exception_specific_tool_error_handler
 ```
 
+### Agent 短期记忆
+
+`short_memory/` 演示 Agent 如何通过 checkpointer 保存同一会话中的消息状态：
+
+- `01_memory_demo.py`：使用 `InMemorySaver` 演示基础短期记忆
+- `02_short_memory_inmemory.py`：加入工具调用，并通过 `get_state()` 查看会话状态
+- `03_short_memory_indb.py`：使用 `PyMySQLSaver` 把 checkpoint 保存到 MySQL
+- `04_custom_state.py`：使用 `state_schema` 扩展 Agent 状态，并通过动态提示词读取状态
+- `05_tool_modify_state.py`：演示工具返回 `Command(update=...)` 修改自定义状态
+- `06_middleware_modify_state.py`：演示 `before_model` 和 `after_model` 在模型调用前后更新状态
+- `07_middleware_modify_state.py`：演示 `after_model` 读取结构化输出并保存订单商品名
+- `08_context_state.py`：演示 runtime context 与 Agent state 的区别
+
+运行 MySQL 示例前，需要先创建 `langchain_db` 数据库，并在 `.env` 中配置
+`MYSQL_DATABASE_URL`。
+
 ## 运行注意事项
 
 - 多数示例会调用真实 DeepSeek 模型并消耗 API 额度。
@@ -213,6 +243,10 @@ python -m agents.tool_call_error_handling.02_exception_specific_tool_error_handl
   `deepseek-chat` 成本更高。
 - 请从项目根目录运行脚本或使用 `python -m <模块路径>`，以确保可以正确导入
   `models.init_chat_model.init_chat_model_llm`。
+- `short_memory/03_short_memory_indb.py` 会连接 MySQL，并把同一 `thread_id` 的 checkpoint
+  持久化到数据库；重复测试时可以更换 `thread_id` 避免读取旧会话。
+- 清空 MySQL checkpoint 时，不要只删除 `checkpoint_migrations` 的数据；如果要完全重置，
+  请删除 checkpoint 相关表后让示例重新创建表结构。
 - 示例中的天气、股票价格和新闻等工具返回模拟数据，不代表真实外部查询结果。
 
 ## 文档维护

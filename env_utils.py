@@ -18,3 +18,5 @@ DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY')
 # DeepSeek API 基础 URL
 DEEPSEEK_BASE_URL = os.getenv('DEEPSEEK_BASE_URL')
 
+# MySQL checkpoint 数据库连接地址
+MYSQL_DATABASE_URL = os.getenv('MYSQL_DATABASE_URL')
