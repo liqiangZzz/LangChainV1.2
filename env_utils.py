@@ -9,8 +9,11 @@ import os
 
 from dotenv import load_dotenv
 
-# 加载 .env 文件中的环境变量，override=True 表示覆盖已存在的环境变量
-load_dotenv(override=True)
+# 加载 .env 文件中的环境变量。
+# override=False 表示：PyCharm / 系统环境变量优先，.env 只补充缺失变量。
+# 这样 .env 可以使用 ${MYSQL_PASSWORD} 这类外部变量拼接配置，
+# 又不会用 .env 里的占位符覆盖 PyCharm 传入的真实值。
+load_dotenv(override=False)
 
 # DeepSeek API 密钥
 DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY')
