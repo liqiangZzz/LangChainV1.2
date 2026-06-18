@@ -48,7 +48,11 @@ def build_agent():
 
 
 def extract_contact_info(user_text: str) -> tuple[ContactInfo, list]:
-    """调用 Agent，并返回结构化联系人对象和完整消息历史。"""
+    """调用 Agent，并返回结构化联系人对象和完整消息历史。
+
+    Args:
+        user_text: 待分析或抽取信息的用户文本。
+    """
     agent = build_agent()
     result = agent.invoke({  # type: ignore
         "messages": [{"role": "user", "content": user_text}]

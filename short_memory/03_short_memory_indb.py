@@ -39,7 +39,11 @@ MYSQL_DATABASE_URL_EXAMPLE = (
 
 @tool
 def get_user_info(name: str) -> str:
-    """根据姓名查询用户信息。"""
+    """根据姓名查询用户信息。
+
+    Args:
+        name: name 参数。
+    """
     user_db = {
         "张三": {"age": 28, "hobby": "旅游、滑雪、喝茶"},
         "李四": {"age": 32, "hobby": "编程、阅读、电影"},
@@ -69,7 +73,11 @@ def get_mysql_database_url() -> str:
 
 
 def setup_checkpointer(checkpointer: PyMySQLSaver) -> None:
-    """初始化 MySQL checkpoint 表，并把常见的手动删库问题转换成可读提示。"""
+    """初始化 MySQL checkpoint 表，并把常见的手动删库问题转换成可读提示。
+
+    Args:
+        checkpointer: 短期记忆保存器，用于保存 messages 和 state。
+    """
     try:
         # 第一次运行前需要 setup() 创建 checkpoint 相关表；重复执行是安全的。
         checkpointer.setup()

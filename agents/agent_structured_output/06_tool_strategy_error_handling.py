@@ -73,7 +73,12 @@ def extract_information(
     user_text: str,
     handle_errors: bool | str = True,
 ) -> tuple[ContactInfo | EventDetails, list]:
-    """提取一种结构化信息，并返回结果对象和完整消息历史。"""
+    """提取一种结构化信息，并返回结果对象和完整消息历史。
+
+    Args:
+        user_text: 待分析或抽取信息的用户文本。
+        handle_errors: 结构化输出错误处理配置。
+    """
     agent = build_agent(handle_errors=handle_errors)
     result = agent.invoke({  # type: ignore
         "messages": [{"role": "user", "content": user_text}]

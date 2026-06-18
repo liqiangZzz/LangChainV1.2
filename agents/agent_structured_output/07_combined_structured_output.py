@@ -65,7 +65,11 @@ def build_agent():
 
 
 def extract_combined_information(user_text: str) -> tuple[CombinedInfo, list]:
-    """提取组合信息，并返回结构化对象和完整消息历史。"""
+    """提取组合信息，并返回结构化对象和完整消息历史。
+
+    Args:
+        user_text: 待分析或抽取信息的用户文本。
+    """
     agent = build_agent()
     result = agent.invoke({  # type: ignore
         "messages": [{"role": "user", "content": user_text}]

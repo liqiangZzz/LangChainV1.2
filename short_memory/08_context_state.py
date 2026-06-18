@@ -44,7 +44,12 @@ def format_state_summary(state: Dict[str, Any]) -> Dict[str, Any]:
 
 @tool
 def get_weather(location: str, runtime: ToolRuntime[ConversationContext, ConversationState]) -> str:
-    """获取指定位置的天气"""
+    """获取指定位置的天气
+
+    Args:
+        location: 地点名称。
+        runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
+    """
     # 工具可以通过 ToolRuntime 读取当前 state 和 context。
     # runtime 不会暴露给模型，模型只需要填写 location。
     print("[tool] runtime.state 摘要:", format_state_summary(runtime.state))
@@ -55,7 +60,11 @@ def get_weather(location: str, runtime: ToolRuntime[ConversationContext, Convers
 
 @after_model
 def save_context_to_state(state: ConversationState, runtime: Runtime[ConversationContext]) -> Dict[str, Any]:
-    """模型调用后运行，把本次 context 合并进可持久化 state。"""
+    """模型调用后运行，把本次 context 合并进可持久化 state。
+
+    Args:
+        runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
+    """
     # 一轮用户请求如果触发了工具调用，通常会有两次模型调用：
     # 第一次模型返回 AIMessage(tool_calls=...)，只是“决定要调用工具”。
     # after_model 会在这次模型返回后立即执行，所以它会出现在真正工具调用之前。

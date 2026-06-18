@@ -61,7 +61,11 @@ VIP_SUPPORT_PROMPT = f"""{BASE_SUPPORT_PROMPT}
 
 @tool
 def query_order_info(order_id: str) -> str:
-    """根据订单ID查询订单的详细信息，包括状态、商品列表和创建时间。"""
+    """根据订单ID查询订单的详细信息，包括状态、商品列表和创建时间。
+
+    Args:
+        order_id: 订单号。
+    """
     order_data = ORDER_DATABASE.get(order_id)
     if not order_data:
         return f"错误：未找到订单 {order_id}。"
@@ -71,7 +75,11 @@ def query_order_info(order_id: str) -> str:
 
 @tool
 def search_faq(keyword: str) -> str:
-    """根据关键词从知识库中检索相关的政策条款或解决方案。"""
+    """根据关键词从知识库中检索相关的政策条款或解决方案。
+
+    Args:
+        keyword: FAQ 搜索关键词。
+    """
     for topic, answer in FAQ_KNOWLEDGE_BASE.items():
         if topic in keyword:
             return answer
@@ -81,7 +89,11 @@ def search_faq(keyword: str) -> str:
 
 @dynamic_prompt
 def dynamic_support_prompt(request: ModelRequest) -> str:
-    """根据 context["query_type"] 动态选择系统提示词。"""
+    """根据 context["query_type"] 动态选择系统提示词。
+
+    Args:
+        request: 当前模型、工具或 middleware 调用请求。
+    """
     # dynamic_prompt 不是只在 invoke 开始时运行一次。
     # 当 Agent 调用工具后再次请求模型生成下一步动作/最终回答时，它也可能再次运行。
     query_type = request.runtime.context.get("query_type", "normal")
@@ -107,7 +119,13 @@ def build_agent():
 
 
 def ask_support_agent(agent, user_query: str, query_type: str = "normal") -> str:
-    """调用 Agent 并返回最终回答。"""
+    """调用 Agent 并返回最终回答。
+
+    Args:
+        agent: 已创建好的 Agent 实例。
+        user_query: 用户输入的问题文本。
+        query_type: 本次客服问题类型。
+    """
     result = agent.invoke(
         {"messages": [{"role": "user", "content": user_query}]},
         # 这里的 context 会进入 request.runtime.context，

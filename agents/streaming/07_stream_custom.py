@@ -68,7 +68,11 @@ def generate_inventory_report() -> str:
 
 
 def print_custom_event(event: dict[str, Any]) -> None:
-    """以便于阅读的格式打印工具发送的自定义事件。"""
+    """以便于阅读的格式打印工具发送的自定义事件。
+
+    Args:
+        event: 流式事件数据。
+    """
     print(
         f"报告类型：{event['report_type']}，"
         f"进度：{event['progress']}%，"

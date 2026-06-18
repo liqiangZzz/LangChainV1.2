@@ -12,7 +12,12 @@ from env_utils import DEEPSEEK_API_KEY, DEEPSEEK_BASE_URL
 class MyCustomCallbackHandler(BaseCallbackHandler):
 
     def on_llm_start(self, serialized, prompts, **kwargs):
-        """当模型开始运行时触发"""
+        """当模型开始运行时触发
+
+        Args:
+            serialized: LangChain 序列化后的模型或链路元数据。
+            prompts: 即将发送给模型的提示词列表。
+        """
 
         # 从 kwargs 字典中安全地获取 config 传入的运行信息
         print("kwargs:", kwargs)
@@ -34,7 +39,11 @@ class MyCustomCallbackHandler(BaseCallbackHandler):
     # 3. 根据 tags 对运行进行分类和监控
     # 4. 触发自定义事件，比如发送通知到监控系统
     def on_llm_end(self, response, **kwargs):
-        """当模型运行结束并返回结果时触发"""
+        """当模型运行结束并返回结果时触发
+
+        Args:
+            response: 模型调用完成后的响应对象。
+        """
 
         # **kwargs 中的参数有如下
         print("kwargs:", kwargs)

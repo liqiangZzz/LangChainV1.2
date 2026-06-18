@@ -15,7 +15,11 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 @tool
 def get_weather(city: str) -> str:
     # 使用 @tool 后，Agent 可以在需要时自动调用这个函数。
-    """获取指定城市的天气信息。"""
+    """获取指定城市的天气信息。
+
+    Args:
+        city: 城市名称。
+    """
     return f"{city}的天气为晴朗，25°C。"
 
 

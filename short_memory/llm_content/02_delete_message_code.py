@@ -65,7 +65,12 @@ def build_delete_messages(messages: list[BaseMessage]) -> list[RemoveMessage]:
 
 
 def print_messages_summary(title: str, messages: list[BaseMessage]) -> None:
-    """只打印消息类型和内容，避免输出 response_metadata 影响阅读。"""
+    """只打印消息类型和内容，避免输出 response_metadata 影响阅读。
+
+    Args:
+        title: 打印输出标题或图书标题筛选条件。
+        messages: 消息列表或当前状态中的 messages。
+    """
     print(title)
     for index, message in enumerate(messages, start=1):
         # message.type 通常是 human / ai / system / tool。
@@ -83,6 +88,9 @@ def delete_old_messages_before_model(state: AgentState, runtime: Runtime) -> Dic
     3. Agent 真正请求 DeepSeek 前，先运行这个 middleware。
     4. 如果这里返回 RemoveMessage，旧消息会从 state 中删除。
     5. DeepSeek 看到的是删除后的短期记忆。
+
+    Args:
+        runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
     """
     messages = state["messages"]
     delete_messages = build_delete_messages(messages)
@@ -127,7 +135,12 @@ def build_agent():
 
 
 def print_state_messages(agent, config: dict) -> None:
-    """打印当前 thread_id 下实际保存的短期记忆。"""
+    """打印当前 thread_id 下实际保存的短期记忆。
+
+    Args:
+        agent: 已创建好的 Agent 实例。
+        config: LangGraph 运行配置，通常包含 configurable.thread_id。
+    """
     # get_state(config=...) 可以查看 checkpointer 中当前 thread_id 对应的状态。
     # 这里重点看 messages，因为 Delete Message 操作的就是这个字段。
     state = agent.get_state(config=config).values
@@ -139,7 +152,13 @@ def print_state_messages(agent, config: dict) -> None:
 
 
 def invoke_and_print(agent, config: dict, user_content: str) -> None:
-    """发送一轮用户消息，并打印模型回复和当前短期记忆。"""
+    """发送一轮用户消息，并打印模型回复和当前短期记忆。
+
+    Args:
+        agent: 已创建好的 Agent 实例。
+        config: LangGraph 运行配置，通常包含 configurable.thread_id。
+        user_content: 本轮用户输入内容。
+    """
     # invoke 输入里的 messages 只包含“本轮新增用户消息”。
     # 由于使用了相同 thread_id，历史消息会由 InMemorySaver 自动接上。
     result = agent.invoke(

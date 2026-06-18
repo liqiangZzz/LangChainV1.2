@@ -15,7 +15,11 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 @tool
 def get_info(runtime: ToolRuntime) -> str:
-    """读取当前 Agent state 中保存的用户信息。"""
+    """读取当前 Agent state 中保存的用户信息。
+
+    Args:
+        runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
+    """
     name = runtime.state.get("user_name", "未知")
     hobby = runtime.state.get("hobby", [])
     return f"用户：{name}，用户爱好：{','.join(hobby)}"
@@ -37,6 +41,10 @@ def update_info(user_name: str, hobby: list[str], runtime: ToolRuntime) -> Comma
     Args:
         name: 用户姓名。
         hobby: 用户爱好列表。
+
+    Args:
+        user_name: user_name 参数。
+        runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
     Returns:
         Command: 更新后的 Agent state 和工具消息。
     """

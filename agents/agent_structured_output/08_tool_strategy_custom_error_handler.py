@@ -22,7 +22,11 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 def custom_error_handler(error: Exception) -> str:
-    """根据结构化输出错误类型，返回给模型不同的修正提示。"""
+    """根据结构化输出错误类型，返回给模型不同的修正提示。
+
+    Args:
+        error: 结构化输出或工具调用过程中捕获的异常对象。
+    """
     error_str = str(error)
 
     # 这些日志只用于学习和调试，可以观察 LangChain 传入的真实异常类型。
@@ -77,7 +81,11 @@ def build_agent():
 
 
 def analyze_product_review(user_text: str) -> tuple[ProductEvaluation, list]:
-    """分析产品评价，并返回结构化结果和完整消息历史。"""
+    """分析产品评价，并返回结构化结果和完整消息历史。
+
+    Args:
+        user_text: 待分析或抽取信息的用户文本。
+    """
     agent = build_agent()
     response = agent.invoke({  # type: ignore
         "messages": [{"role": "user", "content": user_text}]

@@ -12,7 +12,11 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 @tool
 def get_weather(city: str) -> str:
-    """获取指定城市的模拟天气。"""
+    """获取指定城市的模拟天气。
+
+    Args:
+        city: 城市名称。
+    """
     return f"{city}天气晴朗，温度 25°C。"
 
 

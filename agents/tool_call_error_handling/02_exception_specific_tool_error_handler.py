@@ -108,7 +108,12 @@ def update_ticket(
 # 就可以集中处理所有已注册工具抛出的异常，而不用在每个工具中重复写错误响应。
 @wrap_tool_call
 def handle_tool_call_error(request: ToolCallRequest, handler):
-    """执行工具，并按照异常类型返回不同的 ToolMessage。"""
+    """执行工具，并按照异常类型返回不同的 ToolMessage。
+
+    Args:
+        request: 当前模型、工具或 middleware 调用请求。
+        handler: LangChain 提供的默认处理函数。
+    """
     try:
         # 工具正常执行时，直接返回原始工具结果。
         return handler(request)

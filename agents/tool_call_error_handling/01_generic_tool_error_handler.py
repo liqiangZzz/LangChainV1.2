@@ -52,7 +52,12 @@ def get_stock_price(symbol: str) -> str:
 # handler 代表原本的工具执行逻辑，调用 handler(request) 才会真正执行工具。
 @wrap_tool_call
 def handle_tool_call_error(request: ToolCallRequest, handler):
-    """执行工具并将未处理异常转换为 ToolMessage。"""
+    """执行工具并将未处理异常转换为 ToolMessage。
+
+    Args:
+        request: 当前模型、工具或 middleware 调用请求。
+        handler: LangChain 提供的默认处理函数。
+    """
     # request 中包含工具名称、模型生成的参数、工具调用 ID 和当前运行上下文。
     # 学习时可以打印 request，观察模型传给工具的完整调用信息。
     print("request", request)

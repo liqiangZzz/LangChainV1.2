@@ -33,7 +33,11 @@ MAX_RECENT_MESSAGES = 3
 
 
 def format_messages_for_summary(messages: list[BaseMessage]) -> str:
-    """把旧消息整理成摘要模型容易阅读的文本。"""
+    """把旧消息整理成摘要模型容易阅读的文本。
+
+    Args:
+        messages: 消息列表或当前状态中的 messages。
+    """
     lines = []
     for index, message in enumerate(messages, start=1):
         # message.type 用来标明消息角色，例如 human / ai / system / tool。
@@ -43,7 +47,11 @@ def format_messages_for_summary(messages: list[BaseMessage]) -> str:
 
 
 def summarize_old_messages(old_messages: list[BaseMessage]) -> SystemMessage:
-    """调用 DeepSeek，把较早的对话消息压缩成一条 SystemMessage 摘要。"""
+    """调用 DeepSeek，把较早的对话消息压缩成一条 SystemMessage 摘要。
+
+    Args:
+        old_messages: 需要被摘要压缩的较早消息列表。
+    """
     # old_messages 是即将被压缩的较早历史消息。
     # recent_messages 不会进入这里，因为最近消息会原样保留给最终回答模型。
     old_messages_text = format_messages_for_summary(old_messages)
@@ -102,7 +110,13 @@ def build_summarized_messages(messages: list[BaseMessage]) -> list[BaseMessage]:
 
 
 def print_messages_summary(title: str, messages: list[BaseMessage], source: str = "") -> None:
-    """只打印消息类型和内容，避免 response_metadata 干扰观察。"""
+    """只打印消息类型和内容，避免 response_metadata 干扰观察。
+
+    Args:
+        title: 打印输出标题或图书标题筛选条件。
+        messages: 消息列表或当前状态中的 messages。
+        source: 打印消息时附加的来源标签。
+    """
     print(title)
     for index, message in enumerate(messages, start=1):
         # AIMessage 通常包含较长的 response_metadata。
@@ -126,6 +140,9 @@ def summarize_messages_before_model(state: AgentState, runtime: Runtime) -> Dict
     4. 如果消息过多，就额外调用一次 DeepSeek 生成摘要。
     5. 清空旧 messages，写入“摘要消息 + 最近消息”。
     6. DeepSeek 基于压缩后的上下文生成本轮最终回复。
+
+    Args:
+        runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
     """
     messages = state["messages"]
     print_messages_summary("\n[before_model] 摘要前 messages:", messages, source="原始state")
@@ -166,7 +183,12 @@ def build_agent():
 
 
 def print_state_messages(agent, config: dict) -> None:
-    """打印当前 thread_id 下实际保存的短期记忆。"""
+    """打印当前 thread_id 下实际保存的短期记忆。
+
+    Args:
+        agent: 已创建好的 Agent 实例。
+        config: LangGraph 运行配置，通常包含 configurable.thread_id。
+    """
     # get_state(config=...) 读取 checkpointer 中指定 thread_id 的状态。
     # 摘要后，state["messages"] 里应该能看到一条“较早对话摘要”的 SystemMessage。
     state = agent.get_state(config=config).values
@@ -176,7 +198,13 @@ def print_state_messages(agent, config: dict) -> None:
 
 
 def invoke_and_print(agent, config: dict, user_content: str) -> None:
-    """发送一轮用户消息，并打印模型回复和当前短期记忆。"""
+    """发送一轮用户消息，并打印模型回复和当前短期记忆。
+
+    Args:
+        agent: 已创建好的 Agent 实例。
+        config: LangGraph 运行配置，通常包含 configurable.thread_id。
+        user_content: 本轮用户输入内容。
+    """
     # 这里只传入本轮新增的用户消息。
     # 历史消息由 InMemorySaver 根据 thread_id 自动从 state 里取出并拼接。
     result = agent.invoke(

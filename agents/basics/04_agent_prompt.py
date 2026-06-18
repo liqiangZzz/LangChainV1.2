@@ -17,7 +17,12 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 def add_numbers(a: int, b: int):
     # @tool 会把普通 Python 函数包装成 Agent 可调用的工具。
     # 类型标注 a: int、b: int 能帮助模型生成正确的工具参数。
-    """计算并返回两个数的和。"""
+    """计算并返回两个数的和。
+
+    Args:
+        a: 第一个参与计算的整数。
+        b: 第二个参与计算的整数。
+    """
     return f"和为：{a + b}"
 
 

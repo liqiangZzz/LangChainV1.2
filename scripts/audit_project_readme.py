@@ -17,10 +17,20 @@ SKIP_DIRS = {".git", ".idea", ".venv", "__pycache__", "venv", "env", "ENV"}
 
 
 def should_skip(path: Path) -> bool:
+    """should_skip 函数。
+
+    Args:
+        path: 待检查的文件或目录路径。
+    """
     return any(part in SKIP_DIRS for part in path.parts)
 
 
 def get_doc_first_line(path: Path) -> str:
+    """get_doc_first_line 函数。
+
+    Args:
+        path: 待检查的文件或目录路径。
+    """
     content = path.read_text(encoding="utf-8").strip()
     if not content:
         return ""

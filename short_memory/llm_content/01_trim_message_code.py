@@ -33,7 +33,11 @@ MAX_SHORT_MEMORY_MESSAGES = 4
 
 
 def trim_short_memory(messages: list[BaseMessage]) -> list[BaseMessage]:
-    """保留最近对话，丢弃较早的短期记忆。"""
+    """保留最近对话，丢弃较早的短期记忆。
+
+    Args:
+        messages: 消息列表或当前状态中的 messages。
+    """
     return trim_messages(
         messages,
         max_tokens=MAX_SHORT_MEMORY_MESSAGES,
@@ -55,6 +59,9 @@ def trim_messages_before_model(state: AgentState, runtime: Runtime) -> Dict[str,
 
     before_model 会在 Agent 每次真正请求大模型前执行。
     这里截断的是即将发送给模型的 messages，同时也会把截断后的 messages 写回 state。
+
+    Args:
+        runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
     """
     messages = state["messages"]
     print("[before_model] trim messages | 原始消息：", messages)
@@ -95,6 +102,10 @@ def print_state_messages(agent, config: dict) -> None:
     """打印当前 checkpointer 中保存的消息数量。
 
     get_state() 读取的是同一个 thread_id 下的短期记忆状态。
+
+    Args:
+        agent: 已创建好的 Agent 实例。
+        config: LangGraph 运行配置，通常包含 configurable.thread_id。
     """
     state = agent.get_state(config=config).values
     messages = state.get("messages", [])
@@ -107,7 +118,13 @@ def print_state_messages(agent, config: dict) -> None:
 
 
 def invoke_and_print(agent, config: dict, user_content: str) -> None:
-    """发送一轮用户消息，并打印模型回复和当前记忆状态。"""
+    """发送一轮用户消息，并打印模型回复和当前记忆状态。
+
+    Args:
+        agent: 已创建好的 Agent 实例。
+        config: LangGraph 运行配置，通常包含 configurable.thread_id。
+        user_content: 本轮用户输入内容。
+    """
     result = agent.invoke(
         {"messages": [{"role": "user", "content": user_content}]},
         config=config,

@@ -102,7 +102,11 @@ def build_agent():
 
 
 def analyze_customer(user_query: str) -> CustomerAnalysis:
-    """调用 Agent，并返回按照 CustomerAnalysis 构造的数据类实例。"""
+    """调用 Agent，并返回按照 CustomerAnalysis 构造的数据类实例。
+
+    Args:
+        user_query: 用户输入的问题文本。
+    """
     agent = build_agent()
     result = agent.invoke({  # type: ignore
         "messages": [{"role": "user", "content": user_query}]

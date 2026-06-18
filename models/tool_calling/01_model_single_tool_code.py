@@ -7,7 +7,11 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 # 1.创建工具
 @tool
 def get_weather(location: str) -> str:
-    """获取指定位置的天气"""
+    """获取指定位置的天气
+
+    Args:
+        location: 地点名称。
+    """
     return f' {location}的天气是晴朗的。'
 
 

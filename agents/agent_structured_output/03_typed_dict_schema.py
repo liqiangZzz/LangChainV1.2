@@ -90,7 +90,11 @@ def build_agent():
 
 
 def analyze_customer(user_query: str) -> CustomerAnalysis:
-    """调用 Agent，并返回符合 CustomerAnalysis 结构的普通字典。"""
+    """调用 Agent，并返回符合 CustomerAnalysis 结构的普通字典。
+
+    Args:
+        user_query: 用户输入的问题文本。
+    """
     agent = build_agent()
     result = agent.invoke({  # type: ignore
         "messages": [{"role": "user", "content": user_query}]

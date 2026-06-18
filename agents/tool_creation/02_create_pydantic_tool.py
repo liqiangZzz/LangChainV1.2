@@ -42,6 +42,11 @@ class TicketQueryInput(BaseModel):
     @classmethod
     def validate_ticket_id(cls, value: Optional[str]) -> Optional[str]:
         # ticket_id 是可选字段，没有传值时不需要继续校验。
+        """validate_ticket_id 函数。
+
+        Args:
+            value: 待校验的字段值。
+        """
         if value is None:
             return value
 
@@ -69,6 +74,12 @@ def query_tickets(
 
     所有参数均为可选参数；没有提供筛选条件时返回全部模拟工单。
     该 docstring 也会成为工具说明的一部分，帮助大模型判断何时调用此工具。
+
+    Args:
+        ticket_id: 工单编号筛选条件。
+        assignee: 工单负责人筛选条件。
+        status: 工单状态筛选条件。
+        priority: 工单优先级筛选条件。
     """
     try:
         # 使用列表模拟工单数据库。真实项目中通常会替换为数据库或 API 查询。

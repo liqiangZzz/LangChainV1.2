@@ -36,7 +36,11 @@ COMPLEX_QUERY_KEYWORDS = ("分析", "比较", "规划", "步骤", "原因", "总
 
 
 def get_latest_user_text(messages: list) -> str:
-    """从消息列表中提取最近一条用户消息的文本。"""
+    """从消息列表中提取最近一条用户消息的文本。
+
+    Args:
+        messages: 消息列表或当前状态中的 messages。
+    """
     for message in reversed(messages):
         # Agent state 中通常是 LangChain 消息对象。
         if getattr(message, "type", None) == "human":
@@ -50,7 +54,11 @@ def get_latest_user_text(messages: list) -> str:
 
 
 def is_complex_request(messages: list) -> bool:
-    """根据对话轮次、问题长度和关键词判断是否需要严谨分析策略。"""
+    """根据对话轮次、问题长度和关键词判断是否需要严谨分析策略。
+
+    Args:
+        messages: 消息列表或当前状态中的 messages。
+    """
     # 提取最近一条用户消息，只判断用户当前问题，不把模型回复和工具结果
     # 误当成用户输入参与长度及关键词检查。
     latest_user_text = get_latest_user_text(messages)
@@ -82,7 +90,12 @@ def is_complex_request(messages: list) -> bool:
 
 @wrap_model_call
 def dynamic_model_selection(request: ModelRequest, handler) -> ModelResponse:
-    """在每次模型调用前，动态选择公共 DeepSeek 模型的运行配置。"""
+    """在每次模型调用前，动态选择公共 DeepSeek 模型的运行配置。
+
+    Args:
+        request: 当前模型、工具或 middleware 调用请求。
+        handler: LangChain 提供的默认处理函数。
+    """
     messages = request.state["messages"]
 
     if is_complex_request(messages):
@@ -109,7 +122,11 @@ def get_current_location() -> str:
 
 @tool
 def get_weather(city: str) -> str:
-    """获取指定城市的天气信息。"""
+    """获取指定城市的天气信息。
+
+    Args:
+        city: 城市名称。
+    """
     return f"{city}的天气为晴朗，25°C。"
 
 
@@ -129,7 +146,12 @@ def build_agent():
 
 
 def ask_agent(agent, user_query: str) -> str:
-    """调用 Agent，并返回最后一条模型消息的文本内容。"""
+    """调用 Agent，并返回最后一条模型消息的文本内容。
+
+    Args:
+        agent: 已创建好的 Agent 实例。
+        user_query: 用户输入的问题文本。
+    """
     result = agent.invoke(
         {"messages": [{"role": "user", "content": user_query}]}
     )

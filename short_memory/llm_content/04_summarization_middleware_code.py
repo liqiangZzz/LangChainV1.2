@@ -36,7 +36,12 @@ SUMMARY_KEEP = ("messages", 2)
 
 
 def print_messages_summary(title: str, messages: list[BaseMessage]) -> None:
-    """只打印消息类型和内容，方便观察摘要前后的短期记忆。"""
+    """只打印消息类型和内容，方便观察摘要前后的短期记忆。
+
+    Args:
+        title: 打印输出标题或图书标题筛选条件。
+        messages: 消息列表或当前状态中的 messages。
+    """
     print(title)
     for index, message in enumerate(messages, start=1):
         print(f"{index} ---> {message.type}: {message.content}")
@@ -75,7 +80,12 @@ def build_agent():
 
 
 def print_state_messages(agent, config: dict) -> None:
-    """打印当前 thread_id 下由 checkpointer 保存的短期记忆。"""
+    """打印当前 thread_id 下由 checkpointer 保存的短期记忆。
+
+    Args:
+        agent: 已创建好的 Agent 实例。
+        config: LangGraph 运行配置，通常包含 configurable.thread_id。
+    """
     state = agent.get_state(config=config).values
     messages = state.get("messages", [])
     print_messages_summary("[当前短期记忆]", messages)
@@ -83,7 +93,13 @@ def print_state_messages(agent, config: dict) -> None:
 
 
 def invoke_and_print(agent, config: dict, user_content: str) -> None:
-    """发送一轮用户消息，并打印模型回复和当前短期记忆。"""
+    """发送一轮用户消息，并打印模型回复和当前短期记忆。
+
+    Args:
+        agent: 已创建好的 Agent 实例。
+        config: LangGraph 运行配置，通常包含 configurable.thread_id。
+        user_content: 本轮用户输入内容。
+    """
     # invoke 只传入本轮新增用户消息。
     # 历史消息由 InMemorySaver 根据同一个 thread_id 自动接上。
     result = agent.invoke(

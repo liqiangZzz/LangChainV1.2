@@ -18,7 +18,11 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 @tool
 def get_weather(city: str) -> str:
-    """根据城市名称获取天气信息"""
+    """根据城市名称获取天气信息
+
+    Args:
+        city: 城市名称。
+    """
     # 工具只需要返回普通字符串。
     # LangGraph 会把这个工具结果自动包装成 ToolMessage，并追加到 state["messages"]。
     return f"{city}天气晴朗"
@@ -26,7 +30,12 @@ def get_weather(city: str) -> str:
 
 @before_model
 def before_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
-    """模型调用前运行，用当前 messages 重新统计工具调用次数。"""
+    """模型调用前运行，用当前 messages 重新统计工具调用次数。
+
+    Args:
+        state: 当前 Agent state。
+        runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
+    """
     # before_model 会在每次请求模型前执行。
     # 这里统计的是“已经执行完成的工具结果”数量，也就是 messages 里的 ToolMessage 数量。
     # tool_call_count 不是手动 +1 得来的，而是每次重新扫描 messages 统计出来的。
@@ -49,7 +58,12 @@ def before_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
 
 @after_model
 def after_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
-    """模型调用后运行，用来累计模型调用次数。"""
+    """模型调用后运行，用来累计模型调用次数。
+
+    Args:
+        state: 当前 Agent state。
+        runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
+    """
     # after_model 会在模型返回后执行。
     # 返回的 dict 会合并进 Agent state，并被 checkpointer 保存。
     old_model_call_count = state.get("model_call_count", 0)
@@ -86,7 +100,12 @@ def build_agent():
 
 
 def print_final_state(agent, config: dict) -> None:
-    """只打印本例关心的统计字段。"""
+    """只打印本例关心的统计字段。
+
+    Args:
+        agent: 已创建好的 Agent 实例。
+        config: LangGraph 运行配置，通常包含 configurable.thread_id。
+    """
     state = agent.get_state(config=config).values
     print(
         "[当前统计]",

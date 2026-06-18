@@ -55,7 +55,11 @@ IMPORTANT_KEYWORDS = (
 
 
 def is_important_message(message: BaseMessage) -> bool:
-    """判断一条消息是否应该被自定义策略保留。"""
+    """判断一条消息是否应该被自定义策略保留。
+
+    Args:
+        message: 待处理的消息对象。
+    """
     content = str(message.content)
 
     # 只用内容判断，避免依赖具体模型 response_metadata。
@@ -68,7 +72,11 @@ def is_important_message(message: BaseMessage) -> bool:
 
 
 def deduplicate_messages(messages: list[BaseMessage]) -> list[BaseMessage]:
-    """按 message.id 去重，并保持原有顺序。"""
+    """按 message.id 去重，并保持原有顺序。
+
+    Args:
+        messages: 消息列表或当前状态中的 messages。
+    """
     deduplicated_messages = []
     seen_ids = set()
 
@@ -93,6 +101,9 @@ def apply_custom_strategy(messages: list[BaseMessage]) -> list[BaseMessage]:
     2. 始终保留最近几条原始消息。
 
     最终结果 = 关键消息 + 最近消息，并按原始顺序去重。
+
+    Args:
+        messages: 消息列表或当前状态中的 messages。
     """
     if len(messages) <= KEEP_RECENT_MESSAGES:
         # 消息还不多时，不需要做自定义筛选。
@@ -126,7 +137,13 @@ def apply_custom_strategy(messages: list[BaseMessage]) -> list[BaseMessage]:
 
 
 def print_messages_summary(title: str, messages: list[BaseMessage], source: str = "") -> None:
-    """只打印消息类型和内容，方便观察自定义策略保留了什么。"""
+    """只打印消息类型和内容，方便观察自定义策略保留了什么。
+
+    Args:
+        title: 打印输出标题或图书标题筛选条件。
+        messages: 消息列表或当前状态中的 messages。
+        source: 打印消息时附加的来源标签。
+    """
     print(title)
     for index, message in enumerate(messages, start=1):
         # source 标识这批消息在策略中的角色：
@@ -150,6 +167,9 @@ def custom_strategy_before_model(state: AgentState, runtime: Runtime) -> Dict[st
     4. middleware 根据业务关键词和最近上下文挑选消息。
     5. 清空旧 messages，写入自定义策略保留后的 messages。
     6. DeepSeek 基于这些保留消息生成最终回复。
+
+    Args:
+        runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
     """
     messages = state["messages"]
     print_messages_summary("\n[before_model] 策略执行前 messages:", messages, source="原始state")
@@ -186,7 +206,12 @@ def build_agent():
 
 
 def print_state_messages(agent, config: dict) -> None:
-    """打印当前 thread_id 下实际保存的短期记忆。"""
+    """打印当前 thread_id 下实际保存的短期记忆。
+
+    Args:
+        agent: 已创建好的 Agent 实例。
+        config: LangGraph 运行配置，通常包含 configurable.thread_id。
+    """
     # get_state(config=...) 读取 checkpointer 中指定 thread_id 的状态。
     # 如果 before_model 执行了自定义策略，这里看到的就是策略处理后的 messages，
     # 再加上本轮模型刚生成的 AI 回复。
@@ -197,7 +222,13 @@ def print_state_messages(agent, config: dict) -> None:
 
 
 def invoke_and_print(agent, config: dict, user_content: str) -> None:
-    """发送一轮用户消息，并打印模型回复和当前短期记忆。"""
+    """发送一轮用户消息，并打印模型回复和当前短期记忆。
+
+    Args:
+        agent: 已创建好的 Agent 实例。
+        config: LangGraph 运行配置，通常包含 configurable.thread_id。
+        user_content: 本轮用户输入内容。
+    """
     # invoke 只传入本轮新增用户消息。
     # 历史消息由 InMemorySaver 根据同一个 thread_id 自动接上。
     result = agent.invoke(

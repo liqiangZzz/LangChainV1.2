@@ -11,7 +11,11 @@ from env_utils import DEEPSEEK_API_KEY, DEEPSEEK_BASE_URL
 @tool
 def get_weather(city: str):
     # 模拟天气查询
-    """获取给定城市的天气。"""
+    """获取给定城市的天气。
+
+    Args:
+        city: 城市名称。
+    """
     return f"{city} 天气晴朗！"
 
 

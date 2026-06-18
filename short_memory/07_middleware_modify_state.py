@@ -60,6 +60,10 @@ class OrderState(AgentState, total=False):
 def get_order_info(order_id: str, runtime: ToolRuntime) -> Command:
     """
     根据订单ID获取订单信息，包括订单ID、商品名称、价格和状态。
+
+    Args:
+        order_id: 订单号。
+        runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
     """
     print(f"[工具调用] get_order_info(order_id={order_id})")
     order_info = MOCK_DATABASE["orders"].get(order_id)
@@ -92,6 +96,9 @@ def get_order_info(order_id: str, runtime: ToolRuntime) -> Command:
 def get_inventory_info(runtime: ToolRuntime) -> Command:
     """
     根据 state 中保存的商品名查询库存。
+
+    Args:
+        runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
     """
     product_name = runtime.state.get("product_name")
     print(f"[工具调用] get_inventory_info() 从 state 读取 product_name={product_name}")
@@ -124,7 +131,11 @@ def get_inventory_info(runtime: ToolRuntime) -> Command:
 
 @after_model
 def manage_order_state(state: AgentState, runtime: Runtime) -> Dict[str, Any] | None:
-    """模型返回后运行，根据订单结构化结果更新 product_name state。"""
+    """模型返回后运行，根据订单结构化结果更新 product_name state。
+
+    Args:
+        runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
+    """
     # after_model 会在每次模型调用后执行。
     # 只有最终生成 OrderQueryResult 时，才把商品名写入 state。
     print("[after_model] 模型调用结束，开始检查 structured_response。")

@@ -14,12 +14,20 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 @tool
 def get_weather(city: str) -> str:
-    """获取指定城市的模拟天气。"""
+    """获取指定城市的模拟天气。
+
+    Args:
+        city: 城市名称。
+    """
     return f"{city}天气晴朗，温度 25°C。"
 
 
 def print_debug_event(event: dict[str, Any]) -> None:
-    """打印 debug 事件的类型、步骤和关键内容。"""
+    """打印 debug 事件的类型、步骤和关键内容。
+
+    Args:
+        event: 流式事件数据。
+    """
     event_type = event.get("type")
     payload = event.get("payload", {})
 

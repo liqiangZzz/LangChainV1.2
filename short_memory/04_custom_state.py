@@ -49,7 +49,11 @@ class CustomState(AgentState):
 
 @dynamic_prompt
 def custom_state_prompt(request: ModelRequest) -> str:
-    """把自定义 state 注入到系统提示词中，确保模型能看到这些字段。"""
+    """把自定义 state 注入到系统提示词中，确保模型能看到这些字段。
+
+    Args:
+        request: 当前模型、工具或 middleware 调用请求。
+    """
     # state_schema 只是让 Agent 能保存这些字段。
     # dynamic_prompt 会在每次调用模型前运行，把 state 转成模型能看到的系统提示词。
     # 也就是说：state 负责“存数据”，dynamic_prompt 负责“把数据告诉模型”。
@@ -80,7 +84,12 @@ def build_agent():
 
 
 def print_saved_state(agent, config: dict) -> None:
-    """只打印自定义状态，避免完整 messages 输出过长。"""
+    """只打印自定义状态，避免完整 messages 输出过长。
+
+    Args:
+        agent: 已创建好的 Agent 实例。
+        config: LangGraph 运行配置，通常包含 configurable.thread_id。
+    """
     state = agent.get_state(config=config)
     print(
         "保存的自定义状态:",

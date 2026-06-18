@@ -22,7 +22,12 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 async def process_one(question: str, index: int):
-    """处理单个请求"""
+    """处理单个请求
+
+    Args:
+        question: 用户问题文本。
+        index: 当前问题在批处理列表中的序号。
+    """
     print(f"请求 {index}: 开始发送...")
     response = await deepseek_llm.ainvoke(question)
     print(f"请求 {index}: 完成 -> {response.content[:30]}...")
