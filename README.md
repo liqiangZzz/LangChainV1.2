@@ -30,6 +30,7 @@ LangChain 的 `init_chat_model` 统一入口创建，并集中定义在
 │   ├── init_chat_model/  # 公共模型实例与统一初始化入口示例
 ├── short_memory/     # Agent 短期记忆与 checkpoint 示例
 │   └── llm_content/  # LLM 上下文消息截断、删除、摘要和自定义策略示例
+├── long_memory/      # Agent 长期记忆、Store 和跨会话偏好示例
 ├── docs/skills/      # 项目文档维护 skill
 ├── scripts/          # 文档审计与维护辅助脚本
 ├── env_utils.py      # 加载 DeepSeek 和 MySQL 环境变量
@@ -52,7 +53,8 @@ pip install langchain langchain-deepseek langchain-openai python-dotenv pydantic
 python -m pip install \
   "langgraph-checkpoint-mysql[pymysql]==3.0.0" \
   "PyMySQL[rsa]==1.1.2" \
-  "cryptography==46.0.3"
+  "cryptography==46.0.3" \
+  "aiomysql"
 ```
 
 在项目根目录创建 `.env` 文件，并配置以下变量：
@@ -61,7 +63,7 @@ python -m pip install \
 DEEPSEEK_API_KEY=你的 API Key
 DEEPSEEK_BASE_URL=DeepSeek API Base URL
 
-# 仅运行 short_memory/03_short_memory_indb.py 时需要
+# 仅运行 MySQL 记忆示例时需要
 MYSQL_DATABASE_URL=mysql://langchain_user:你的密码@localhost:3306/langchain_db
 ```
 
@@ -235,6 +237,17 @@ python -m agents.tool_call_error_handling.02_exception_specific_tool_error_handl
 运行 MySQL 示例前，需要先创建 `langchain_db` 数据库，并在 `.env` 中配置
 `MYSQL_DATABASE_URL`。
 
+### Agent 长期记忆
+
+`long_memory/` 演示 Agent 如何通过 LangGraph Store 保存和读取长期记忆：
+
+- `01_long_memory_demo.py`：使用 `InMemoryStore` 演示 namespace、key、value 基础操作
+- `02_long_memory_in_memory.py`：在 Agent 工具中查询内存版长期用户资料
+- `03_long_memory_in_db.py`：使用 MySQL 同时持久化短期记忆 checkpointer 和长期记忆 store
+- `04_modify_long_memory_in_tool.py`：在工具中写入和读取用户偏好，并跨 thread_id 查询
+- `05_short_and_long_memory_demo.py`：综合电商客服示例，组合短期记忆、长期记忆、
+  自定义 state、消息摘要、工具异常处理和流式输出
+
 ## 运行注意事项
 
 - 多数示例会调用真实 DeepSeek 模型并消耗 API 额度。
@@ -250,6 +263,8 @@ python -m agents.tool_call_error_handling.02_exception_specific_tool_error_handl
   持久化到数据库；重复测试时可以更换 `thread_id` 避免读取旧会话。
 - `short_memory/llm_content/` 下的摘要示例可能在正式回答前额外调用模型生成摘要，
   会增加 API 调用次数和 token 消耗。
+- `long_memory/03_long_memory_in_db.py` 和 `long_memory/05_short_and_long_memory_demo.py`
+  会连接 MySQL，并分别写入 checkpoint 和 store 表相关数据。
 - 清空 MySQL checkpoint 时，不要只删除 `checkpoint_migrations` 的数据；如果要完全重置，
   请删除 checkpoint 相关表后让示例重新创建表结构。
 - 示例中的天气、股票价格和新闻等工具返回模拟数据，不代表真实外部查询结果。
