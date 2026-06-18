@@ -14,6 +14,7 @@ Agent 短期记忆示例包。
 5. 使用工具返回 Command(update=...) 修改 state。
 6. 使用 before_model / after_model middleware 在模型调用前后统计和更新状态。
 7. 区分 runtime context 和 Agent state，理解“本次调用参数”和“持久化会话状态”的边界。
+8. 在 LLM 上下文变长时，通过截断、删除、摘要和自定义策略管理 messages。
 
 主要文件：
 
@@ -49,12 +50,17 @@ Agent 短期记忆示例包。
   演示 runtime context 和 Agent state 的区别，以及如何把本次 context 合并进持久化 state。
   重点理解 context 只在本次 invoke 生效，而 state 会按 thread_id 保存。
 
+- llm_content/
+  演示短期记忆消息进入 LLM 上下文前的管理方式，包括 trim_messages 截断、
+  RemoveMessage 删除、手写摘要、内置 SummarizationMiddleware 和自定义保留策略。
+
 运行注意事项：
 
 - InMemorySaver 只把状态保存在当前进程内存中，程序退出后记忆会丢失。
 - MySQL 示例需要提前安装 langgraph-checkpoint-mysql 和 PyMySQL，并配置 MYSQL_DATABASE_URL。
 - before_model 和 after_model 围绕“每次模型调用”执行；一轮用户请求如果触发工具调用，
   通常会经历两次模型调用。
+- llm_content 下的摘要类示例可能在正式回答前额外调用一次模型生成摘要，会增加 API 调用次数。
 - 示例会调用真实 LLM，运行前需要确认 .env 中配置了 DeepSeek 相关环境变量。
 - 本包的 __init__.py 只提供说明，不导入示例模块，避免 import short_memory 时触发真实模型调用。
 """

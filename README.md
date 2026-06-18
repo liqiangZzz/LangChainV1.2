@@ -29,6 +29,7 @@ LangChain 的 `init_chat_model` 统一入口创建，并集中定义在
 │   ├── basics/       # 同步、流式、批处理和异步调用示例
 │   ├── init_chat_model/  # 公共模型实例与统一初始化入口示例
 ├── short_memory/     # Agent 短期记忆与 checkpoint 示例
+│   └── llm_content/  # LLM 上下文消息截断、删除、摘要和自定义策略示例
 ├── docs/skills/      # 项目文档维护 skill
 ├── scripts/          # 文档审计与维护辅助脚本
 ├── env_utils.py      # 加载 DeepSeek 和 MySQL 环境变量
@@ -228,6 +229,8 @@ python -m agents.tool_call_error_handling.02_exception_specific_tool_error_handl
 - `06_middleware_modify_state.py`：演示 `before_model` 和 `after_model` 在模型调用前后更新状态
 - `07_middleware_modify_state.py`：演示 `after_model` 读取结构化输出并保存订单商品名
 - `08_context_state.py`：演示 runtime context 与 Agent state 的区别
+- `llm_content/`：演示 LLM 上下文变长后的消息管理方案，包括 `trim_messages` 截断、
+  `RemoveMessage` 删除、手写摘要、内置 `SummarizationMiddleware` 和自定义保留策略
 
 运行 MySQL 示例前，需要先创建 `langchain_db` 数据库，并在 `.env` 中配置
 `MYSQL_DATABASE_URL`。
@@ -245,6 +248,8 @@ python -m agents.tool_call_error_handling.02_exception_specific_tool_error_handl
   `models.init_chat_model.init_chat_model_llm`。
 - `short_memory/03_short_memory_indb.py` 会连接 MySQL，并把同一 `thread_id` 的 checkpoint
   持久化到数据库；重复测试时可以更换 `thread_id` 避免读取旧会话。
+- `short_memory/llm_content/` 下的摘要示例可能在正式回答前额外调用模型生成摘要，
+  会增加 API 调用次数和 token 消耗。
 - 清空 MySQL checkpoint 时，不要只删除 `checkpoint_migrations` 的数据；如果要完全重置，
   请删除 checkpoint 相关表后让示例重新创建表结构。
 - 示例中的天气、股票价格和新闻等工具返回模拟数据，不代表真实外部查询结果。
