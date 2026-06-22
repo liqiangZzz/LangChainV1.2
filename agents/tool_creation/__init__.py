@@ -19,7 +19,7 @@ Agent 工具创建示例包。
    - 使用 field_validator 校验工单 ID。
    - 支持按工单 ID、负责人、状态和优先级组合筛选。
 
-3. 03_create_schema_tool.py
+3. 03_create_json_schema_tool.py
    演示直接使用 JSON Schema 定义工具参数：
    - 使用 type、properties 和 description 描述参数。
    - 使用 enum 限制图书分类的可选值。
@@ -31,7 +31,7 @@ Agent 工具创建示例包。
 - 请从项目根目录使用模块方式运行，例如：
   python -m agents.tool_creation.01_create_tool
   python -m agents.tool_creation.02_create_pydantic_tool
-  python -m agents.tool_creation.03_create_schema_tool
+  python -m agents.tool_creation.03_create_json_schema_tool
 
 运行注意事项：
 

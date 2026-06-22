@@ -193,14 +193,14 @@ python -m agents.streaming.07_stream_custom
 
 - `01_create_tool.py`：使用 `@tool` 装饰器和函数签名创建工具
 - `02_create_pydantic_tool.py`：使用 Pydantic 模型定义强类型参数和字段校验
-- `03_create_schema_tool.py`：直接使用 JSON Schema 定义参数、枚举和必填规则
+- `03_create_json_schema_tool.py`：直接使用 JSON Schema 定义参数、枚举和必填规则
 
 可以从项目根目录按模块运行：
 
 ```bash
 python -m agents.tool_creation.01_create_tool
 python -m agents.tool_creation.02_create_pydantic_tool
-python -m agents.tool_creation.03_create_schema_tool
+python -m agents.tool_creation.03_create_json_schema_tool
 ```
 
 ### Agent 工具异常处理

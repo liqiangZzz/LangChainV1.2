@@ -48,7 +48,7 @@ class TicketQueryInput(BaseModel):
             value: 待校验的字段值。
         """
         if value is None:
-            return value
+            raise ValueError("工单ID不能为空")
 
         # 工单 ID 统一使用大写，避免大小写不同导致数据库查询不到记录。
         if not value.isupper():
