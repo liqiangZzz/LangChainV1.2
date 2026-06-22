@@ -14,7 +14,7 @@ rate_limiter = InMemoryRateLimiter(
 )
 
 deepseek_llm = init_chat_model(
-    model="deepseek-chat",
+    model="deepseek-v4-pro",
     model_provider="deepseek",
     api_key=DEEPSEEK_API_KEY,
     api_base=DEEPSEEK_BASE_URL,

@@ -11,7 +11,7 @@ Agent 基础能力示例包。
 
 2. 02_create_agent_dynamic_model.py
    使用 wrap_model_call middleware，根据消息数量、问题长度和关键词，
-   在同一个 deepseek-chat 模型的两组生成参数之间动态选择。
+   在同一个 DeepSeek 模型的两组生成参数之间动态选择。
 
 3. 03_agent_invoke.py
    演示 invoke 的 messages 输入格式，以及 HumanMessage、AIMessage、

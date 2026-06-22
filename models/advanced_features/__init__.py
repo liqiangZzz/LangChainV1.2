@@ -7,8 +7,8 @@
 主要文件：
 
 - 01_model_reasoner.py
-  对比普通 deepseek-chat 和推理模型 deepseek-reasoner 的初始化方式。
-  当前脚本默认调用 deepseek-reasoner，运行会触发真实 API 请求，并且推理模型通常更贵。
+  演示当前 DeepSeek 模型的思考/推理模式，使用 deepseek-v4-pro 并显式开启
+  thinking 与 high reasoning_effort。
 
 - 02_model_rate_limiter.py
   演示 InMemoryRateLimiter 的使用方式，通过 requests_per_second、check_every_n_seconds、
@@ -28,8 +28,8 @@
 运行注意事项：
 
 - 三个示例都会调用真实 DeepSeek API；速率限制示例会连续发起三次请求。
-- 01_model_reasoner.py 和 03_model_invocation_config.py 会调用 deepseek-reasoner，
-  其额度成本通常高于 deepseek-chat。
+- 本项目统一使用 deepseek-v4-pro。普通示例通常会显式关闭思考模式；
+  推理示例会显式开启思考模式。
 - callback 只用于观察运行信息，不要在日志中记录 API Key 等敏感配置。
 - 本包的 __init__.py 只提供说明，不导入示例模块，避免 import 包时触发模型调用。
 """

@@ -26,7 +26,7 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 # 摘要触发条件：当消息数量 >= 4 时触发摘要。
-# 这里不用 ("tokens", 4000)，是因为 deepseek-v4-flash 当前不支持
+# 这里不用 ("tokens", 4000)，是因为 deepseek-v4-pro 当前不支持
 # get_num_tokens_from_messages()，按 messages 数量触发更稳定、也更容易观察。
 SUMMARY_TRIGGER = ("messages", 4)
 
