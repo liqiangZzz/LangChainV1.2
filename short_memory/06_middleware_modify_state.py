@@ -37,6 +37,7 @@ def before_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
         runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
     """
     # before_model 会在每次请求模型前执行。
+    # 执行时机：用户消息、历史消息、已完成的工具消息进入 state 之后，真正调用 LLM 之前。
     # 这里统计的是“已经执行完成的工具结果”数量，也就是 messages 里的 ToolMessage 数量。
     # tool_call_count 不是手动 +1 得来的，而是每次重新扫描 messages 统计出来的。
     # 注意：模型刚决定调用工具时，工具还没执行，所以这里统计不到那次工具调用。
@@ -52,7 +53,10 @@ def before_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
     )
 
     # middleware 通过 return dict 更新 state。
-    # LangGraph 会把这个返回值合并进 Agent state，相当于更新 tool_call_count 字段。
+    # 这里没有直接写 state["tool_call_count"] = tool_call_count。
+    # 真正修改 state 的时机是：before_model 函数返回后，LangGraph 会把这个 dict
+    # 合并进 Agent state，相当于更新 state["tool_call_count"]。
+    # 更新完成后，模型调用时拿到的 state 中就包含最新的 tool_call_count。
     return {"tool_call_count": tool_call_count}
 
 
@@ -65,7 +69,8 @@ def after_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
         runtime: 工具或 middleware 的运行时对象，可读取 context、state、store 等信息。
     """
     # after_model 会在模型返回后执行。
-    # 返回的 dict 会合并进 Agent state，并被 checkpointer 保存。
+    # 执行时机：LLM 已经生成 AIMessage，并追加到 state["messages"] 之后。
+    # 这里读取的是本次模型调用结束后的 state，再基于旧值计算新的模型调用次数。
     old_model_call_count = state.get("model_call_count", 0)
     new_model_call_count = old_model_call_count + 1
     messages_count = len(state["messages"])
@@ -77,6 +82,11 @@ def after_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
         f"messages_count={messages_count}, "
         f"tool_call_count={tool_call_count}"
     )
+
+    # 真正修改 state 的时机是：after_model 函数返回后。
+    # LangGraph 会把返回值合并进 Agent state，相当于执行：
+    # state["model_call_count"] = new_model_call_count
+    # 因为本例配置了 checkpointer，同一个 thread_id 下一轮还能继续读到这个累计值。
     return {"model_call_count": new_model_call_count}
 
 
@@ -93,6 +103,8 @@ def build_agent():
         model=deepseek_llm,
         tools=[get_weather],
         state_schema=CustomState,
+        # state_schema 声明 tool_call_count / model_call_count 是允许保存到 state 的字段。
+        # middleware 返回这些字段时，LangGraph 才能把它们作为自定义状态持久化。
         # middleware 按列表注册，让 Agent 在指定生命周期节点自动执行这些函数。
         middleware=[before_model, after_model],
         checkpointer=InMemorySaver(),
@@ -107,6 +119,8 @@ def print_final_state(agent, config: dict) -> None:
         config: LangGraph 运行配置，通常包含 configurable.thread_id。
     """
     state = agent.get_state(config=config).values
+    # get_state 读取的是 checkpointer 中指定 thread_id 的最新 state。
+    # 这里看到的统计值，来自 before_model / after_model 返回 dict 后被合并保存的结果。
     print(
         "[当前统计]",
         {
