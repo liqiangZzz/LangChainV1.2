@@ -158,7 +158,8 @@ def query_order_status(order_id: str, runtime: ToolRuntime) -> Command:
     )
 
     # Command(update=...) 可以同时更新自定义 state 和 messages。
-    # 这里 current_order_id 会进入短期记忆，后续推荐工具可以读取。
+    # current_order_id 不是在 invoke/stream 输入中赋值的，
+    # 而是在查询订单工具执行后写入短期记忆，后续推荐工具可以读取。
     return Command(
         update={
             "current_order_id": order_id,
