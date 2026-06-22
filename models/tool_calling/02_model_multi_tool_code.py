@@ -6,6 +6,7 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 # 1.定义工具
 # 定义股票查询工具
+# @tool 会把普通 Python 函数包装成 LangChain 工具，函数名、参数和 docstring 会提供给模型参考。
 @tool
 def get_stock_price(company: str, timeframe: str = 'today') -> str:
     """
@@ -15,7 +16,7 @@ def get_stock_price(company: str, timeframe: str = 'today') -> str:
        timeframe: 时间范围（today-今日, week-本周, month-本月）
    """
 
-    # 模拟股票数据
+    # 模拟股票数据：这里不请求真实行情接口，只用于演示工具调用流程。
     mock_data = {
         "苹果公司": {"today": 185.20, "week": 183.50, "month": 180.75},
         "微软公司": {"today": 415.86, "week": 412.30, "month": 405.42},
@@ -38,7 +39,7 @@ def search_news(company: str) -> str:
     Return:
         公司的财经新闻，每个新闻占一行
     """
-    # 模拟新闻数据
+    # 模拟新闻数据：模型只能通过工具拿到这些本地准备好的新闻内容。
     mock_news = {
         "苹果公司": [
             "苹果发布新款iPhone，股价上涨3%",
@@ -62,15 +63,18 @@ def search_news(company: str) -> str:
 
 
 # 2. 初始化模型并绑定工具
+# bind_tools 只是让模型知道“有哪些工具可以调用”，并不会帮我们真正执行工具函数。
 model_with_tools = deepseek_llm.bind_tools([get_stock_price, search_news])
 
 # 3. 建立工具查找字典（这在生产环境是标准做法）
+# 后续模型返回 tool_calls 时，只会给出工具名和参数；代码需要通过这个映射找到真实函数。
 tools_map = {
     "get_stock_price": get_stock_price,
     "search_news": search_news  # 注意这里名字要和函数名一致
 }
 
 # 4.准备messages
+# messages 保存完整对话历史：用户问题、模型工具调用请求、工具返回结果、最终回答。
 messages = []
 # human_message = HumanMessage(content="苹果公司今天的股价是多少？最近有什么新闻？")
 human_message = HumanMessage(content="比较一下微软和苹果的股价")
@@ -78,14 +82,17 @@ human_message = HumanMessage(content="比较一下微软和苹果的股价")
 messages.append(human_message)
 
 # 5.工具调用
+# 使用循环处理多轮工具调用：模型可能先请求工具，拿到工具结果后再继续请求其他工具。
 while True:
     # 每次循环模型都会看到更新后的 message 列表
     response = model_with_tools.invoke(messages)  # model_with_tools.invoke(messages) 时，模型（LLM）会返回一个 AIMessage 对象。
     messages.append(response)
 
     if response.tool_calls:
+        # tool_calls 是模型想调用的工具列表，可能一次返回一个，也可能一次返回多个。
         print(f"检测到工具调用: {[tc['name'] for tc in response.tool_calls]}")
         for tool_call in response.tool_calls:
+            # 每个 tool_call 里包含 name、args、id 等信息。
             tool_name = tool_call["name"]
             # 动态获取工具并执行
             selected_tool = tools_map.get(tool_name)
@@ -107,4 +114,3 @@ while True:
         print("\n--- 最终答案 ---")
         print(response.content)
         break
-

@@ -18,7 +18,7 @@
    直接使用 JSON Schema 字典声明字段、数组结构和必填规则，
    最终返回符合 Schema 的普通字典。
 
-4. 04_parser_output.py
+4. 04_json_output_parser.py
    使用 ChatPromptTemplate、JsonOutputParser 和 LCEL 构建解析链，
    通过格式指令要求模型生成 JSON，并将结果解析为字典。
 

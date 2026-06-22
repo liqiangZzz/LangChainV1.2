@@ -81,8 +81,8 @@ python quick_start.py
 也可以按模块运行其他示例，例如：
 
 ```bash
-python -m models.basics.blocking_call
-python -m models.basics.stream_output
+python -m models.basics.01_blocking_invoke
+python -m models.basics.02_stream_output
 python -m agents.basics.05_agent_dynamic_prompt
 python -m agents.async_invocation.01_basic_ainvoke
 python -m agents.streaming.01_stream_updates
@@ -97,12 +97,12 @@ python -m agents.tool_call_error_handling.01_generic_tool_error_handler
 
 `models/basics/` 包含聊天模型的基础调用示例：
 
-- `blocking_call.py`：同步阻塞调用
-- `stream_output.py`：同步流式输出
-- `batch_process.py`：同步批处理
-- `async_call.py`：异步调用
-- `async_batch_process.py`：异步批处理
-- `async_stream_output.py`：异步流式输出
+- `01_blocking_invoke.py`：同步阻塞调用
+- `02_stream_output.py`：同步流式输出
+- `03_batch_process.py`：同步批处理
+- `04_async_high_concurrency_ainvoke.py`：异步高并发调用
+- `05_async_abatch_process.py`：异步批处理
+- `06_async_astream_output.py`：异步流式输出
 
 ### 模型初始化
 

@@ -21,6 +21,8 @@ class Movie(BaseModel):
 
 
 # 2. 初始化模型并绑定输出结构
+# 让 deepseek_llm 按照 Movie 这个结构返回结果
+# include_raw=True 表示结果里不仅包含解析后的结构化数据，还会保留模型原始返回内容。
 model_with_structured_output = deepseek_llm.with_structured_output(Movie, include_raw=True)
 
 # 3. 调用模型，直接获取 Movie 实例

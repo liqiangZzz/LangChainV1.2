@@ -6,30 +6,30 @@
 
 主要文件：
 
-- blocking_call.py
+- 01_blocking_invoke.py
   使用 invoke 发起同步阻塞调用，并演示字典消息和 LangChain 消息对象。
 
-- stream_output.py
+- 02_stream_output.py
   使用 stream 逐块读取并打印模型输出。
 
-- batch_process.py
+- 03_batch_process.py
   使用 batch_as_completed 并发处理多个输入，并按完成顺序读取结果。
 
-- async_call.py
+- 04_async_high_concurrency_ainvoke.py
   使用 ainvoke 和 asyncio.gather 并发发起多个异步请求。
 
-- async_batch_process.py
+- 05_async_abatch_process.py
   使用 abatch 批量异步处理多个输入。
 
-- async_stream_output.py
+- 06_async_astream_output.py
   使用 astream 异步迭代并实时打印模型输出。
 
 运行方式：
 
 - 请从项目根目录使用模块方式运行，例如：
-  python -m models.basics.blocking_call
-  python -m models.basics.stream_output
-  python -m models.basics.async_call
+  python -m models.basics.01_blocking_invoke
+  python -m models.basics.02_stream_output
+  python -m models.basics.06_async_astream_output
 
 运行注意事项：
 

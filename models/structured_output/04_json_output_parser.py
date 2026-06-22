@@ -1,19 +1,10 @@
 """
 输出解析器
 """
-from langchain.chat_models import init_chat_model
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
-from env_utils import DEEPSEEK_BASE_URL, DEEPSEEK_API_KEY
-
-# 初始化模型
-deepseek_llm = init_chat_model(
-    api_key=DEEPSEEK_API_KEY,
-    api_base=DEEPSEEK_BASE_URL,
-    model="deepseek-chat",
-    model_provider="deepseek",
-)
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
 # 1. 定义 Pydantic 模型
@@ -29,9 +20,9 @@ parser = JsonOutputParser(pydantic_object=Movie)
 # parser.get_format_instructions() 会自动生成一份告诉模型如何输出 JSON 的“说明书”
 prompt = ChatPromptTemplate.from_template(
     template="""回答用户问题。
-{format_instructions}
-问题：{question}
-""",
+                {format_instructions}
+                问题：{question}
+             """,
     # 提前绑定格式说明，简化调用时的传参
     partial_variables={"format_instructions": parser.get_format_instructions()}
 )
