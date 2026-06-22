@@ -103,6 +103,8 @@ def build_summarized_messages(messages: list[BaseMessage]) -> list[BaseMessage]:
         recent_messages,
         source="原样保留",
     )
+
+    # 摘要化较早消息。
     summary_message = summarize_old_messages(old_messages)
 
     # 最终传给模型的上下文 = 一条摘要 + 最近几条原始消息（*代表解包，把消息列表展开）。

@@ -148,6 +148,10 @@ def manage_order_state(state: AgentState, runtime: Runtime) -> Dict[str, Any] | 
 
     if isinstance(structured_response, OrderQueryResult):
         print(f"[after_model] 识别为订单结果，写入 product_name={structured_response.product_name}")
+        # middleware 通过返回 dict 更新 state。
+        # LangGraph 会把这个返回值合并进 Agent state，效果等价于保存：
+        # state["product_name"] = structured_response.product_name
+        # 后续工具可以通过 runtime.state.get("product_name") 读取这个商品名。
         return {"product_name": structured_response.product_name}
 
     print("[after_model] 不是订单结果，保持 product_name 不变。")

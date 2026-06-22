@@ -16,6 +16,26 @@ Agent 短期记忆示例包。
 7. 区分 runtime context 和 Agent state，理解“本次调用参数”和“持久化会话状态”的边界。
 8. 在 LLM 上下文变长时，通过截断、删除、摘要和自定义策略管理 messages。
 
+state 与 context：
+
+- state 是 Agent 的会话状态，会被 checkpointer 按 thread_id 保存。默认包含
+  messages，也可以通过 state_schema 扩展 user_id、订单号、商品名、统计次数等
+  业务字段。适合保存后续多轮对话还要继续使用的信息。
+- context 是本次 invoke/stream 传入的运行时上下文，只在当前调用中有效，不会自动
+  写入短期记忆。适合传递当前登录用户、渠道、租户、权限、语言等本次请求参数。
+- 工具和 middleware 可以通过 runtime.state 读取 state，通过 runtime.context 读取
+  context；二者都不会自动暴露给模型。若希望模型看到 state，需要用 dynamic_prompt
+  或 middleware 显式注入提示词。
+- 当 context 中的信息需要跨轮保留时，可以在 middleware 中返回 dict，将本次
+  context 合并进 state；否则应保持为临时运行参数。
+
+常见 state 更新方式：
+
+- invoke 输入中传入 state_schema 声明过的字段，作为本轮初始状态的一部分。
+- before_model / after_model middleware 返回 dict，让 LangGraph 合并进 state。
+- 工具返回 Command(update=...)，在工具执行后同时更新 messages 和业务状态字段。
+- 返回新的 messages、RemoveMessage 或摘要消息，管理 state["messages"] 的长度和内容。
+
 主要文件：
 
 - 01_memory_demo.py
