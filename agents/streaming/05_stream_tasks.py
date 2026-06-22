@@ -30,6 +30,8 @@ def print_task_event(event: dict[str, Any]) -> None:
     """
     task_name = event.get("name")
 
+    # tasks 模式中，任务开始事件通常包含 input；任务结束事件通常包含 result/error。
+    # 这里用是否存在 input 来区分开始和结束，便于观察节点调度过程。
     if "input" in event:
         print(f"任务开始：{task_name}")
         print(f"触发条件：{event.get('triggers', [])}")
@@ -49,6 +51,8 @@ def main() -> None:
         system_prompt="你是一个天气助手，需要查询天气时必须调用工具。",
     )
 
+    # tasks 模式只关注任务级别事件，适合排查 Agent 调用了哪些节点、是否报错。
+    # 它不会像 messages 模式那样逐 token 输出模型文本。
     for event in agent.stream(
         {"messages": [{"role": "user", "content": "北京天气怎么样？"}]},
         stream_mode="tasks",

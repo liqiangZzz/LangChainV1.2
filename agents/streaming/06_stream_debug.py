@@ -34,12 +34,16 @@ def print_debug_event(event: dict[str, Any]) -> None:
     print(f"步骤：{event.get('step')}，事件类型：{event_type}")
 
     if event_type == "checkpoint":
+        # checkpoint 事件表示图在某一步保存或推进了状态。
+        # metadata.source 能帮助判断检查点来自输入、循环还是节点执行。
         metadata = payload.get("metadata", {})
         print(f"检查点来源：{metadata.get('source')}")
         print(f"下一节点：{payload.get('next', [])}")
     else:
+        # task / task_result 事件用于观察具体节点的开始和结束。
         print(f"任务节点：{payload.get('name')}")
         if event_type == "task_result":
+            # error 为 None 表示该节点正常结束；非 None 时可据此定位失败节点。
             print(f"执行错误：{payload.get('error')}")
 
     print("-" * 50)
@@ -53,6 +57,7 @@ def main() -> None:
         system_prompt="你是一个天气助手，需要查询天气时必须调用工具。",
     )
 
+    # debug 模式信息最全，通常用于排查执行流程；日常展示不建议直接使用。
     for event in agent.stream(
         {"messages": [{"role": "user", "content": "北京天气怎么样？"}]},
         stream_mode="debug",

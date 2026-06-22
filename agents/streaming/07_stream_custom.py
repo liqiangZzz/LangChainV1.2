@@ -19,6 +19,7 @@ def generate_sales_report() -> str:
     """模拟生成销售报告，并持续发送生成进度。"""
     # writer 需要在 Agent/Graph 的执行上下文中获取。
     # 传给 writer 的数据会原样出现在 custom 流中。
+    # writer 只能在工具运行时调用；如果脱离 Agent 执行上下文，通常拿不到当前流写入器。
     writer = get_stream_writer()
 
     writer(
@@ -30,6 +31,7 @@ def generate_sales_report() -> str:
     )
 
     for i in range(1, 5):
+        # 这里用 sleep 模拟耗时任务，让 custom 流能连续看到进度事件。
         time.sleep(0.5)
         progress = i * 25
         writer(
@@ -46,6 +48,7 @@ def generate_sales_report() -> str:
 @tool
 def generate_inventory_report() -> str:
     """模拟生成库存报告，并持续发送分析进度。"""
+    # custom 事件的结构完全由业务决定，只要调用 writer(...) 即可发送给外层 stream。
     writer = get_stream_writer()
 
     progress_events = (
@@ -73,6 +76,7 @@ def print_custom_event(event: dict[str, Any]) -> None:
     Args:
         event: 流式事件数据。
     """
+    # event 就是工具内部 writer(...) 传出的字典，custom 模式不会额外包装成 state。
     print(
         f"报告类型：{event['report_type']}，"
         f"进度：{event['progress']}%，"
@@ -90,6 +94,7 @@ def main() -> None:
     )
 
     # custom 模式只返回 writer(...) 主动写入的数据，不返回完整 Agent 状态。
+    # 如果工具没有调用 writer(...)，外层就收不到业务进度事件。
     for event in reporting_agent.stream(
         {"messages": [{"role": "user", "content": "生成销售报告和库存报告"}]},
         stream_mode="custom",

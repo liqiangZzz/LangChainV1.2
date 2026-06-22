@@ -28,6 +28,8 @@ def main() -> None:
         system_prompt="你是一个天气助手，需要查询天气时必须调用工具。",
     )
 
+    # values 模式每次返回的是“当前完整 state”，不是某个节点刚写入的增量。
+    # 因此 messages 会从用户消息开始，随着模型回复、工具结果、最终回答逐步变长。
     for step, state in enumerate(
         agent.stream(
             {"messages": [{"role": "user", "content": "北京天气怎么样？"}]},
@@ -39,6 +41,7 @@ def main() -> None:
         print(f"\n第 {step} 次完整状态，消息数量：{len(messages)}")
 
         if messages:
+            # 打印当前完整状态中的最后一条消息，方便观察本步骤新增了什么。
             messages[-1].pretty_print()
 
 
