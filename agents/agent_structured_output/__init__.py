@@ -35,7 +35,7 @@ Agent 结构化输出示例包。
    使用唯一的组合模型同时承载联系人和活动信息，说明需要同时返回多类数据时，
    应使用嵌套模型而不是 Union 二选一。
 
-8. 08_tool_strategy_custom_error_handler.py
+8. 08_tool_strategy_custom_handle_errors.py
    将自定义函数传给 handle_errors，根据 StructuredOutputValidationError、
    MultipleStructuredOutputsError 等异常返回不同的模型重试提示。
 
@@ -48,7 +48,7 @@ Agent 结构化输出示例包。
 - 请从项目根目录使用模块方式运行，例如：
   python -m agents.agent_structured_output.01_pydantic_tool_strategy
   python -m agents.agent_structured_output.06_tool_strategy_error_handling
-  python -m agents.agent_structured_output.08_tool_strategy_custom_error_handler
+  python -m agents.agent_structured_output.08_tool_strategy_custom_handle_errors
   python -m agents.agent_structured_output.09_tool_strategy_callable_handle_errors
 
 运行注意事项：
