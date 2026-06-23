@@ -72,7 +72,7 @@ class MyCustomCallbackHandler(BaseCallbackHandler):
 custom_handler = MyCustomCallbackHandler()
 
 deepseek_llm = init_chat_model(
-    model="deepseek-v4-pro",
+    model="DeepSeek-V4-Flash",
     model_provider="deepseek",
     api_key=DEEPSEEK_API_KEY,
     api_base=DEEPSEEK_BASE_URL,
@@ -94,7 +94,7 @@ config = {
     "metadata": {"user_id": "123"},  # 记录用户ID
     "callbacks": [custom_handler],  # 启用自定义回调
     "configurable": {
-        "model": "deepseek-v4-pro",  # 配置模型参数，当前模型默认启用思考模式
+        "model": "DeepSeek-V4-Flash",  # 配置模型参数，当前模型默认启用思考模式
         "temperature": 0.7,  # 配置温度参数
         "max_tokens": 1000  # 配置最大令牌数
     }

@@ -8,7 +8,7 @@ init_chat_model 初始化示例包。
 主要文件：
 
 - init_chat_model_llm.py
-  使用 init_chat_model 创建公共 deepseek_llm，统一模型为 deepseek-v4-pro，
+  使用 init_chat_model 创建公共 deepseek_llm，统一模型为 DeepSeek-V4-Flash，
   并配置 API Key、api_base、model_provider 和关闭思考模式参数。
 
 - invoke_model.py

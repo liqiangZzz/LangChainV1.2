@@ -255,7 +255,7 @@ python -m agents.tool_call_error_handling.02_exception_specific_tool_error_handl
 - Agent 结构化输出发生 Schema 校验错误并自动重试时，也会增加模型调用次数。
 - `tool_call_error_handling/01_generic_tool_error_handler.py` 会访问模拟失败的外部接口；
   `02_exception_specific_tool_error_handler.py` 包含随机异常，因此重复运行的结果可能不同。
-- 本项目统一使用 `deepseek-v4-pro`。普通示例通常关闭思考模式；推理示例会显式开启
+- 本项目统一使用 `DeepSeek-V4-Flash`。普通示例通常关闭思考模式；推理示例会显式开启
   思考模式，运行前注意额度消耗。
 - 请从项目根目录运行脚本或使用 `python -m <模块路径>`，以确保可以正确导入
   `models.init_chat_model.init_chat_model_llm`。

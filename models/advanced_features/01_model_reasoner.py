@@ -1,7 +1,7 @@
 """
 推理模型
 
-本项目统一使用 deepseek-v4-pro。
+本项目统一使用 DeepSeek-V4-Flash。
 普通模型调用会关闭思考模式；推理示例使用同一个模型并显式开启思考模式。
 """
 
@@ -10,7 +10,7 @@ from langchain.chat_models import init_chat_model
 from env_utils import DEEPSEEK_API_KEY, DEEPSEEK_BASE_URL
 
 deepseek_llm = init_chat_model(
-    model="deepseek-v4-pro",
+    model="DeepSeek-V4-Flash",
     model_provider="deepseek",
     api_key=DEEPSEEK_API_KEY,
     api_base=DEEPSEEK_BASE_URL,
@@ -18,7 +18,7 @@ deepseek_llm = init_chat_model(
 )
 
 deepseek_reasoner_llm = init_chat_model(
-    model="deepseek-v4-pro",
+    model="DeepSeek-V4-Flash",
     model_provider="deepseek",
     api_key=DEEPSEEK_API_KEY,
     api_base=DEEPSEEK_BASE_URL,

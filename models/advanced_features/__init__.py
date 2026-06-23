@@ -7,7 +7,7 @@
 主要文件：
 
 - 01_model_reasoner.py
-  演示当前 DeepSeek 模型的思考/推理模式，使用 deepseek-v4-pro 并显式开启
+  演示当前 DeepSeek 模型的思考/推理模式，使用 DeepSeek-V4-Flash 并显式开启
   thinking 与 high reasoning_effort。
 
 - 02_model_rate_limiter.py
@@ -28,7 +28,7 @@
 运行注意事项：
 
 - 三个示例都会调用真实 DeepSeek API；速率限制示例会连续发起三次请求。
-- 本项目统一使用 deepseek-v4-pro。普通示例通常会显式关闭思考模式；
+- 本项目统一使用 DeepSeek-V4-Flash。普通示例通常会显式关闭思考模式；
   推理示例会显式开启思考模式。
 - callback 只用于观察运行信息，不要在日志中记录 API Key 等敏感配置。
 - 本包的 __init__.py 只提供说明，不导入示例模块，避免 import 包时触发模型调用。
