@@ -13,6 +13,10 @@ from langchain.tools import tool
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义工具 —— 为 Agent 提供天气查询能力
+# =====================================================================
+
 @tool
 def get_weather(city: str) -> str:
     # 使用 @tool 后，Agent 可以在需要时自动调用这个函数。
@@ -24,6 +28,10 @@ def get_weather(city: str) -> str:
     return f"{city}的天气为晴朗，25°C。"
 
 
+# =====================================================================
+# 2. 创建 Agent —— 设置默认系统提示词
+# =====================================================================
+
 agent = create_agent(
     model=deepseek_llm,
     tools=[get_weather],
@@ -31,6 +39,11 @@ agent = create_agent(
     # 如果 invoke 里又传入 system 消息，模型会同时看到两条系统级指令。
     system_prompt="你是能查询任何问题的助手"
 )
+
+
+# =====================================================================
+# 3. 发起 invoke —— 同时传入 system 和 user 消息
+# =====================================================================
 
 response = agent.invoke({  # type: ignore
     # invoke 的核心输入是 messages，格式类似 OpenAI / LangChain 的聊天消息列表。
@@ -45,6 +58,11 @@ response = agent.invoke({  # type: ignore
         {"role": "user", "content": "100加上50等于多少？"}
     ]
 })
+
+
+# =====================================================================
+# 4. 查看消息轨迹 —— 观察 Agent 的完整执行链路
+# =====================================================================
 
 # 如果只关心最终回答，可以打印最后一条消息的 content。
 # print(response)

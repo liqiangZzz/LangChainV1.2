@@ -14,6 +14,10 @@ from langchain.tools import tool
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 准备两组模型配置 —— 同一个模型，不同生成策略
+# =====================================================================
+
 # 两个对象仍然使用公共模型的模型名称，只是生成参数不同。
 # model_copy 不会修改 init_chat_model_llm.py 中共享的 deepseek_llm，
 # 因此不会影响其他示例。
@@ -34,6 +38,10 @@ PRECISE_MODEL = deepseek_llm.model_copy(
 # 出现这些词时，即使消息数量不多，也优先使用更稳定的模型配置。
 COMPLEX_QUERY_KEYWORDS = ("分析", "比较", "规划", "步骤", "原因", "总结")
 
+
+# =====================================================================
+# 2. 判断请求复杂度 —— 根据消息数量、长度和关键词分流
+# =====================================================================
 
 def get_latest_user_text(messages: list) -> str:
     """从消息列表中提取最近一条用户消息的文本。
@@ -88,6 +96,10 @@ def is_complex_request(messages: list) -> bool:
     return has_multiple_steps or has_long_question or has_complex_keyword
 
 
+# =====================================================================
+# 3. 编写 middleware —— 每次模型调用前动态选择配置
+# =====================================================================
+
 @wrap_model_call
 def dynamic_model_selection(request: ModelRequest, handler) -> ModelResponse:
     """在每次模型调用前，动态选择公共 DeepSeek 模型的运行配置。
@@ -114,6 +126,10 @@ def dynamic_model_selection(request: ModelRequest, handler) -> ModelResponse:
     return handler(request.override(model=selected_model))
 
 
+# =====================================================================
+# 4. 定义工具 —— 让 Agent 可以先定位再查天气
+# =====================================================================
+
 @tool
 def get_current_location() -> str:
     """获取用户当前所在城市。"""
@@ -129,6 +145,10 @@ def get_weather(city: str) -> str:
     """
     return f"{city}的天气为晴朗，25°C。"
 
+
+# =====================================================================
+# 5. 创建与调用 Agent —— 把动态模型选择放入 middleware
+# =====================================================================
 
 def build_agent():
     """创建带动态模型选择 middleware 的天气查询 Agent。"""
@@ -157,6 +177,10 @@ def ask_agent(agent, user_query: str) -> str:
     )
     return result["messages"][-1].content
 
+
+# =====================================================================
+# 6. 运行示例 —— 观察 middleware 打印的策略选择
+# =====================================================================
 
 if __name__ == "__main__":
     weather_agent = build_agent()
