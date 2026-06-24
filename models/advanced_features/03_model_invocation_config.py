@@ -2,13 +2,16 @@
 调用配置
 """
 from langchain.chat_models import init_chat_model
-from langchain_core.callbacks import  BaseCallbackHandler
+from langchain_core.callbacks import BaseCallbackHandler
 from langchain_core.runnables import ConfigurableField
 
 from env_utils import DEEPSEEK_API_KEY, DEEPSEEK_BASE_URL
 
 
-# 1. 定义自定义回调处理器：用于监控模型运行全过程
+# =====================================================================
+# 1. 定义自定义回调处理器 —— 监控模型运行全过程
+# =====================================================================
+
 class MyCustomCallbackHandler(BaseCallbackHandler):
 
     def on_llm_start(self, serialized, prompts, **kwargs):
@@ -71,6 +74,11 @@ class MyCustomCallbackHandler(BaseCallbackHandler):
 # 实例化回调处理器
 custom_handler = MyCustomCallbackHandler()
 
+
+# =====================================================================
+# 2. 初始化可配置模型 —— 暴露运行时可覆盖的字段
+# =====================================================================
+
 deepseek_llm = init_chat_model(
     model="DeepSeek-V4-Flash",
     model_provider="deepseek",
@@ -85,9 +93,12 @@ deepseek_llm = init_chat_model(
     max_tokens=ConfigurableField(id="max_tokens")
 
 )
-# 1. 初始化模型并直接通过链式调用指定可调整字段
 
-# 2. 准备 config 字典
+
+# =====================================================================
+# 3. 准备 config —— 设置 run_name、tags、metadata、callbacks 和模型参数
+# =====================================================================
+
 config = {
     "run_name": "joke_generation",  # 在LangSmith中这次运行会显示为 "joke_generation"
     "tags": ["tag1", "tag2"],  # 打上标签便于分类查找
@@ -100,7 +111,11 @@ config = {
     }
 }
 
-# 3. 调用模型并传入 config
+
+# =====================================================================
+# 4. 发起调用 —— 观察回调输出和最终回答
+# =====================================================================
+
 response = deepseek_llm.invoke(
     "给我讲个AI相关的笑话",
     config=config
