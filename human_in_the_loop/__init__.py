@@ -24,6 +24,9 @@ Human-in-the-loop 人工介入示例包。
 - 06_hitl_multi_descisions_demo.py
   演示一次中断中包含多个工具调用时，按顺序提交多个决策。
 
+- 07_hitl_comprehensive_demo.py
+  文件管理助手综合示例，用虚拟文件系统串联 approve / reject / edit / respond 四种决策。
+
 运行注意事项：
 
 - 多数示例会在模块顶层调用真实模型，运行前注意 API 额度、网络和环境变量配置。
