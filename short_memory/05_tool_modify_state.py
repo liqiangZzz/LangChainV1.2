@@ -13,6 +13,9 @@ from langgraph.types import Command
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义读取工具 —— 从 runtime.state 里拿当前用户档案
+# =====================================================================
 @tool
 def get_info(runtime: ToolRuntime) -> str:
     """读取当前 Agent state 中保存的用户信息。
@@ -25,6 +28,9 @@ def get_info(runtime: ToolRuntime) -> str:
     return f"用户：{name}，用户爱好：{','.join(hobby)}"
 
 
+# =====================================================================
+# 2. 定义更新工具 —— 返回 Command(update=...) 才能修改 state
+# =====================================================================
 @tool
 def update_info(user_name: str, hobby: list[str], runtime: ToolRuntime) -> Command:
     """
@@ -110,6 +116,9 @@ def update_info(user_name: str, hobby: list[str], runtime: ToolRuntime) -> Comma
     )
 
 
+# =====================================================================
+# 3. 声明自定义 state —— Command 更新的字段必须在这里登记
+# =====================================================================
 class CustomState(AgentState, total=False):
     """
    自定义 Agent 状态。
@@ -137,6 +146,9 @@ class CustomState(AgentState, total=False):
     hobby: list[str]
 
 
+# =====================================================================
+# 4. 创建 Agent —— 让工具读写 state 形成闭环
+# =====================================================================
 def build_agent():
     """创建允许工具修改 state 的 Agent。"""
     return create_agent(
@@ -153,6 +165,9 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 5. 运行两轮对话 —— 先保存，再覆盖更新
+# =====================================================================
 def main() -> None:
     """运行两轮对话，演示工具写入并更新 state。"""
     agent = build_agent()

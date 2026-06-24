@@ -15,6 +15,9 @@ from langgraph.checkpoint.memory import InMemorySaver
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 创建带短期记忆的 Agent —— checkpointer 负责记住同一会话
+# =====================================================================
 def main() -> None:
     """使用相同 thread_id 执行两轮对话，观察短期记忆效果。"""
     agent = create_agent(

@@ -37,6 +37,9 @@ MYSQL_DATABASE_URL_EXAMPLE = (
 )
 
 
+# =====================================================================
+# 1. 定义示例工具 —— 第二轮会用它查询短期记忆里的姓名
+# =====================================================================
 @tool
 def get_user_info(name: str) -> str:
     """根据姓名查询用户信息。
@@ -52,6 +55,9 @@ def get_user_info(name: str) -> str:
     return f'姓名：{name}, 年龄：{info["age"]}, 爱好：{info["hobby"]}'
 
 
+# =====================================================================
+# 2. 创建 Agent —— MySQL checkpointer 负责持久化会话状态
+# =====================================================================
 def build_agent(checkpointer):
     """创建使用 MySQL checkpointer 的 Agent。"""
     from models.init_chat_model.init_chat_model_llm import deepseek_llm
@@ -64,6 +70,9 @@ def build_agent(checkpointer):
     )
 
 
+# =====================================================================
+# 3. 读取数据库配置 —— 缺配置时直接给出可执行提示
+# =====================================================================
 def get_mysql_database_url() -> str:
     """读取 MySQL checkpoint 连接地址，并在缺失时给出明确提示。"""
     if not MYSQL_DATABASE_URL:
@@ -72,6 +81,9 @@ def get_mysql_database_url() -> str:
     return MYSQL_DATABASE_URL
 
 
+# =====================================================================
+# 4. 初始化 checkpoint 表 —— 顺手兜住常见迁移表误删问题
+# =====================================================================
 def setup_checkpointer(checkpointer: PyMySQLSaver) -> None:
     """初始化 MySQL checkpoint 表，并把常见的手动删库问题转换成可读提示。
 
@@ -96,6 +108,9 @@ def setup_checkpointer(checkpointer: PyMySQLSaver) -> None:
         raise
 
 
+# =====================================================================
+# 5. 运行两轮对话 —— 用同一 thread_id 验证 MySQL 短期记忆
+# =====================================================================
 def main() -> None:
     """使用 MySQL 持久化保存同一 thread_id 的会话状态。"""
     database_url = get_mysql_database_url()

@@ -16,6 +16,9 @@ from langgraph.runtime import Runtime
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义天气工具 —— 工具消息会参与后续统计
+# =====================================================================
 @tool
 def get_weather(city: str) -> str:
     """根据城市名称获取天气信息
@@ -28,6 +31,9 @@ def get_weather(city: str) -> str:
     return f"{city}天气晴朗"
 
 
+# =====================================================================
+# 2. before_model 统计工具结果 —— 每次模型调用前先数一遍 messages
+# =====================================================================
 @before_model
 def before_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
     """模型调用前运行，用当前 messages 重新统计工具调用次数。
@@ -60,6 +66,9 @@ def before_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
     return {"tool_call_count": tool_call_count}
 
 
+# =====================================================================
+# 3. after_model 累计模型调用 —— 每次模型返回后给计数器加一
+# =====================================================================
 @after_model
 def after_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
     """模型调用后运行，用来累计模型调用次数。
@@ -90,6 +99,9 @@ def after_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
     return {"model_call_count": new_model_call_count}
 
 
+# =====================================================================
+# 4. 声明统计 state —— middleware 写入的字段也要登记
+# =====================================================================
 class CustomState(AgentState, total=False):
     """声明 middleware 会写入的自定义状态字段。"""
 
@@ -97,6 +109,9 @@ class CustomState(AgentState, total=False):
     model_call_count: int
 
 
+# =====================================================================
+# 5. 创建 Agent —— middleware 挂到模型调用生命周期上
+# =====================================================================
 def build_agent():
     """创建带 before_model / after_model 统计逻辑的 Agent。"""
     return create_agent(
@@ -111,6 +126,9 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 6. 打印统计快照 —— 只看计数器，不展开完整消息历史
+# =====================================================================
 def print_final_state(agent, config: dict) -> None:
     """只打印本例关心的统计字段。
 
@@ -131,6 +149,9 @@ def print_final_state(agent, config: dict) -> None:
     )
 
 
+# =====================================================================
+# 7. 运行多轮对话 —— 看模型调用次数和工具结果数量如何累加
+# =====================================================================
 def main() -> None:
     """运行三轮对话，观察 before_model 和 after_model 的统计变化。"""
     agent = build_agent()
@@ -167,6 +188,7 @@ def main() -> None:
     print("[模型回复]", result4["messages"][-1].content)
     print_final_state(agent, config)
     print("*" * 60)
+
 
 if __name__ == "__main__":
     main()

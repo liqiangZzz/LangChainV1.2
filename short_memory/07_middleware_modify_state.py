@@ -21,6 +21,9 @@ from pydantic import BaseModel
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义结构化输出模型 —— 让 after_model 能按类型识别结果
+# =====================================================================
 class OrderQueryResult(BaseModel):
     """Order query result"""
     order_id: str
@@ -35,6 +38,9 @@ class InventoryQueryResult(BaseModel):
     stock_quantity: int  # 库存数量
 
 
+# =====================================================================
+# 2. 准备模拟数据库 —— 订单和库存分开，方便观察 state 串联
+# =====================================================================
 MOCK_DATABASE = {
     "orders": {
         "order_001": OrderQueryResult(order_id="order_001", product_name="华为手机", price=1999.00, status="已发货"),
@@ -50,6 +56,9 @@ MOCK_DATABASE = {
 }
 
 
+# =====================================================================
+# 3. 声明订单 state —— product_name 是跨轮复用的关键线索
+# =====================================================================
 class OrderState(AgentState, total=False):
     """声明 after_model 会写入的自定义状态字段。"""
 
@@ -58,6 +67,9 @@ class OrderState(AgentState, total=False):
     product_name: str
 
 
+# =====================================================================
+# 4. 查询订单工具 —— 只写 ToolMessage，不直接写 product_name
+# =====================================================================
 @tool
 def get_order_info(order_id: str, runtime: ToolRuntime) -> Command:
     """
@@ -96,6 +108,9 @@ def get_order_info(order_id: str, runtime: ToolRuntime) -> Command:
         )
 
 
+# =====================================================================
+# 5. 查询库存工具 —— 从 state 中读取最近一次订单商品名
+# =====================================================================
 @tool
 def get_inventory_info(runtime: ToolRuntime) -> Command:
     """
@@ -140,6 +155,9 @@ def get_inventory_info(runtime: ToolRuntime) -> Command:
     })
 
 
+# =====================================================================
+# 6. after_model 写 state —— 把结构化订单结果转成持久状态
+# =====================================================================
 @after_model
 def manage_order_state(state: AgentState, runtime: Runtime) -> Dict[str, Any] | None:
     """模型返回后运行，根据订单结构化结果更新 product_name state。
@@ -175,6 +193,9 @@ def manage_order_state(state: AgentState, runtime: Runtime) -> Dict[str, Any] | 
     return None
 
 
+# =====================================================================
+# 7. 创建 Agent —— 结构化输出和 middleware 在这里配合
+# =====================================================================
 def build_agent():
     """创建使用 after_model 修改 state 的 Agent。"""
     return create_agent(
@@ -192,6 +213,9 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 8. 跑完整链路 —— 查询订单后再用“这个订单”查询库存
+# =====================================================================
 def main() -> None:
     """运行两组对话，观察 after_model 如何更新 product_name state。"""
     agent = build_agent()

@@ -17,6 +17,9 @@ from langgraph.runtime import Runtime
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 声明 context 和 state —— 一个临时随请求，一个持久随会话
+# =====================================================================
 class ConversationContext(TypedDict, total=False):
     """运行时上下文：只对本次 invoke 生效。"""
 
@@ -32,6 +35,9 @@ class ConversationState(AgentState, total=False):
     call_llm_count: int  # 大模型调用次数
 
 
+# =====================================================================
+# 2. 格式化 state 摘要 —— 打印时只看本例关心的字段
+# =====================================================================
 def format_state_summary(state: Dict[str, Any]) -> Dict[str, Any]:
     """只保留学习本例需要关注的 state 字段。"""
     return {
@@ -42,6 +48,9 @@ def format_state_summary(state: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+# =====================================================================
+# 3. 定义工具 —— 工具能同时看到 runtime.context 和 runtime.state
+# =====================================================================
 @tool
 def get_weather(location: str, runtime: ToolRuntime[ConversationContext, ConversationState]) -> str:
     """获取指定位置的天气
@@ -58,6 +67,9 @@ def get_weather(location: str, runtime: ToolRuntime[ConversationContext, Convers
     return f"{location}的天气是晴天"
 
 
+# =====================================================================
+# 4. after_model 合并 context —— 需要跨轮保留时再写入 state
+# =====================================================================
 @after_model
 def save_context_to_state(state: ConversationState, runtime: Runtime[ConversationContext]) -> Dict[str, Any]:
     """模型调用后运行，把本次 context 合并进可持久化 state。
@@ -97,6 +109,9 @@ def save_context_to_state(state: ConversationState, runtime: Runtime[Conversatio
     return state_update
 
 
+# =====================================================================
+# 5. 创建 Agent —— 同时声明 context_schema 和 state_schema
+# =====================================================================
 def build_agent():
     """创建同时声明 context_schema 和 state_schema 的 Agent。"""
     return create_agent(
@@ -111,6 +126,9 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 6. 运行两轮对话 —— 第一轮传 context，第二轮只靠 state 延续
+# =====================================================================
 def main() -> None:
     """运行两轮对话，观察 context 和 state 的差异。"""
     # 当前依赖版本在 ToolRuntime.context 参与内部序列化时，可能打印 Pydantic warning。
