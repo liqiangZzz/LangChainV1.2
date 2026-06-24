@@ -13,6 +13,10 @@ from langchain.agents import create_agent
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 执行 messages 流 —— 逐段打印模型生成文本
+# =====================================================================
+
 def main() -> None:
     """流式调用 Agent，并逐段打印模型回复。"""
     agent = create_agent(
@@ -54,6 +58,10 @@ def main() -> None:
 
     print()
 
+
+# =====================================================================
+# 2. 运行示例 —— 观察 message_chunk 和 metadata
+# =====================================================================
 
 if __name__ == "__main__":
     main()

@@ -10,6 +10,10 @@ from langgraph.checkpoint.memory import InMemorySaver
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 执行会话示例 —— 用 checkpoints 观察状态保存过程
+# =====================================================================
+
 def main() -> None:
     """使用相同 thread_id 执行两轮对话并打印检查点。"""
     agent = create_agent(
@@ -41,6 +45,10 @@ def main() -> None:
         state = agent.get_state(config)
         print("助手：", state.values["messages"][-1].content)
 
+
+# =====================================================================
+# 2. 运行示例 —— 相同 thread_id 保留当前会话状态
+# =====================================================================
 
 if __name__ == "__main__":
     main()

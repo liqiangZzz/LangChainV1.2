@@ -16,6 +16,10 @@ from langgraph.graph.state import CompiledStateGraph
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义业务工具 —— 模拟客户资料、订单和促销查询
+# =====================================================================
+
 @tool
 def query_customer_data(customer_id: str) -> dict[str, Any]:
     """查询客户基本信息。
@@ -60,6 +64,10 @@ def get_current_promotions() -> dict[str, Any]:
     }
 
 
+# =====================================================================
+# 2. 创建 Agent —— 配置工具和内存检查点
+# =====================================================================
+
 def create_customer_service_agent() -> CompiledStateGraph:
     """创建带内存检查点的客户服务 Agent。"""
     return create_agent(
@@ -78,6 +86,10 @@ def create_customer_service_agent() -> CompiledStateGraph:
         checkpointer=InMemorySaver(),
     )
 
+
+# =====================================================================
+# 3. 执行 updates 流 —— 按节点状态增量打印消息
+# =====================================================================
 
 def print_stream_updates() -> None:
     """流式执行 Agent，并逐步打印模型节点和工具节点产生的消息。"""
@@ -114,6 +126,10 @@ def print_stream_updates() -> None:
 
             print("-" * 50)
 
+
+# =====================================================================
+# 4. 运行示例 —— 观察 model/tools 节点的状态更新
+# =====================================================================
 
 if __name__ == "__main__":
     print_stream_updates()
