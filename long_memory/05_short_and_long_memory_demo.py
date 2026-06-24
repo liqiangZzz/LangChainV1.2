@@ -37,6 +37,9 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 warnings.filterwarnings("ignore", message="Pydantic serializer warnings:*", category=UserWarning)
 
 
+# =====================================================================
+# 1. 定义上下文和短期状态 —— context 跟着请求走，state 跟着 thread_id 走
+# =====================================================================
 class UserContext(BaseModel):
     """每次调用 Agent 时传入的运行时上下文。
 
@@ -58,6 +61,9 @@ class CustomerSessionState(AgentState, total=False):
     current_order_id: str
 
 
+# =====================================================================
+# 2. 定义工具入参模型 —— 给模型一张清楚的工具调用表单
+# =====================================================================
 class OrderQuery(BaseModel):
     """查询订单工具的入参结构。"""
 
@@ -77,6 +83,9 @@ class UserPreferenceUpdate(BaseModel):
     )
 
 
+# =====================================================================
+# 3. 准备模拟订单数据 —— 不连真实业务库，专注演示记忆机制
+# =====================================================================
 MOCK_ORDERS = {
     "order001": {
         "order_id": "order001",
@@ -95,6 +104,9 @@ MOCK_ORDERS = {
 }
 
 
+# =====================================================================
+# 4. 规划长期记忆命名空间 —— 每个用户一块偏好小仓库
+# =====================================================================
 def preference_namespace(user_id: str) -> tuple[str, str]:
     """长期记忆命名空间：按用户隔离偏好数据。
 
@@ -108,6 +120,9 @@ def preference_namespace(user_id: str) -> tuple[str, str]:
     return (f"user_{user_id}", "preferences")
 
 
+# =====================================================================
+# 5. 定义业务工具 —— 查询订单、写偏好、读推荐依据
+# =====================================================================
 @tool
 def get_user_info(runtime: ToolRuntime) -> str:
     """获取当前用户信息和会话中的当前订单号。
@@ -220,7 +235,9 @@ def get_recommendation(runtime: ToolRuntime) -> str:
     return f"当前订单 [{current_order_id}]；用户长期偏好：{preference_text}。"
 
 
-
+# =====================================================================
+# 6. 包装工具异常 —— 示例里报错也要给出友好的 ToolMessage
+# =====================================================================
 @wrap_tool_call
 def handle_tool_errors(request: Any, handler: Any) -> ToolMessage:
     """统一处理工具异常，避免原始异常直接打断 Agent。
@@ -241,6 +258,9 @@ def handle_tool_errors(request: Any, handler: Any) -> ToolMessage:
         )
 
 
+# =====================================================================
+# 7. 编写系统提示词 —— 把工具使用规则钉在驾驶舱里
+# =====================================================================
 SYSTEM_PROMPT = """
 你是一个智能电商客服助手。
 
@@ -253,6 +273,9 @@ SYSTEM_PROMPT = """
 """.strip()
 
 
+# =====================================================================
+# 8. 创建 Agent —— 短期记忆、长期记忆、摘要和异常处理一起装配
+# =====================================================================
 def build_agent(checkpointer: PyMySQLSaver, store: PyMySQLStore):
     """创建同时使用短期记忆、长期记忆和 middleware 的 Agent。
 
@@ -284,6 +307,9 @@ def build_agent(checkpointer: PyMySQLSaver, store: PyMySQLStore):
     )
 
 
+# =====================================================================
+# 9. 打印流式片段 —— 只展示模型和工具节点的最新消息
+# =====================================================================
 def print_stream_chunk(chunk: dict[str, Any]) -> None:
     """只打印模型节点和工具节点产生的最新消息。
 
@@ -301,6 +327,9 @@ def print_stream_chunk(chunk: dict[str, Any]) -> None:
         messages[-1].pretty_print()
 
 
+# =====================================================================
+# 10. 启动控制台循环 —— 每轮只传新增消息，历史交给 checkpointer
+# =====================================================================
 def run_chat_loop(agent, config: dict[str, Any], user_context: UserContext) -> None:
     """控制台交互循环。
 
@@ -336,6 +365,9 @@ def run_chat_loop(agent, config: dict[str, Any], user_context: UserContext) -> N
             print(f"调用过程中出现错误: {exc}")
 
 
+# =====================================================================
+# 11. 初始化 MySQL 后开聊 —— thread_id 管会话，user_id 管长期偏好
+# =====================================================================
 def main() -> None:
     """初始化 MySQL 记忆后启动交互式客服助手。"""
     if not MYSQL_DATABASE_URL:

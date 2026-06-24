@@ -22,6 +22,9 @@ from env_utils import MYSQL_DATABASE_URL
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义查询工具 —— 工具直接读取 MySQL Store 中的长期记忆
+# =====================================================================
 @tool
 def get_user_info(runtime: ToolRuntime) -> str:
     """根据当前 runtime.context.user_id 从 MySQL 长期记忆中查询用户信息。"""
@@ -36,6 +39,9 @@ def get_user_info(runtime: ToolRuntime) -> str:
     return f"用户id:{user_id},用户姓名：{value['name']},用户age:{value['age']}，用户city:{value['city']},用户hobby:{value['hobby']}"
 
 
+# =====================================================================
+# 2. 声明运行时上下文 —— 本轮调用要查谁，由 user_id 说了算
+# =====================================================================
 @dataclass
 class UserContext:
     """本次 invoke 传入的运行时上下文。
@@ -53,6 +59,9 @@ class UserContext:
 warnings.filterwarnings("ignore", message="Pydantic serializer warnings:*", category=UserWarning)
 
 
+# =====================================================================
+# 3. 打开 MySQL 记忆组件 —— checkpointer 管短期，store 管长期
+# =====================================================================
 with (
     PyMySQLSaver.from_conn_string(MYSQL_DATABASE_URL) as checkpointer,
     PyMySQLStore.from_conn_string(MYSQL_DATABASE_URL) as store):
@@ -71,6 +80,10 @@ with (
         {"name": "李四", "age": 32, "city": "上海", "hobby": "旅游、摄影"}
     )
 
+
+    # =================================================================
+    # 4. 创建 Agent —— 把 MySQL 版短期记忆和长期记忆都接入
+    # =================================================================
     agent = create_agent(
         model=deepseek_llm,
         tools=[get_user_info],
@@ -80,6 +93,9 @@ with (
         context_schema=UserContext
     )
 
+    # =================================================================
+    # 5. 连续调用两轮 —— 看看长期记忆切换和短期记忆延续如何并存
+    # =================================================================
     # 两次调用故意使用同一个 thread_id。
     # 这样可以观察：
     # - 长期记忆 store 会根据 runtime.context.user_id 查询不同用户。

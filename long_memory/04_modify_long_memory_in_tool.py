@@ -25,6 +25,9 @@ from pydantic import BaseModel, Field
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义运行时上下文 —— user_id 是长期记忆的定位坐标
+# =====================================================================
 @dataclass
 class UserContent:
     """本次 invoke 的运行时上下文。
@@ -36,6 +39,9 @@ class UserContent:
     user_id: str
 
 
+# =====================================================================
+# 2. 定义工具入参模型 —— 让模型按固定结构保存偏好
+# =====================================================================
 class UserPreference(BaseModel):
     """保存偏好工具的参数结构。
 
@@ -48,6 +54,9 @@ class UserPreference(BaseModel):
     preference: str = Field(description="具体偏好内容，如 '蓝色'、'意大利面' 等")
 
 
+# =====================================================================
+# 3. 写入长期记忆 —— 工具里直接 runtime.store.put
+# =====================================================================
 @tool(args_schema=UserPreference)
 def save_user_preference(category: str, preference: str, runtime: ToolRuntime) -> str:
     """
@@ -74,6 +83,9 @@ def save_user_preference(category: str, preference: str, runtime: ToolRuntime) -
     return f"已成功保存{user_id}的{category}偏好：{preference}"
 
 
+# =====================================================================
+# 4. 读取长期记忆 —— 按同一个 namespace 找回用户偏好
+# =====================================================================
 @tool
 def get_user_preference(runtime: ToolRuntime) -> str:
     """
@@ -105,6 +117,9 @@ def get_user_preference(runtime: ToolRuntime) -> str:
     return "用户偏好：" + ", ".join(preferences_list)
 
 
+# =====================================================================
+# 5. 创建 Agent —— 让保存工具和读取工具配成闭环
+# =====================================================================
 def build_agent():
     """创建可以在工具中读写长期记忆的 Agent。"""
     return create_agent(
@@ -126,6 +141,9 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 6. 封装一轮调用 —— 每轮都明确 thread_id 和 user_id
+# =====================================================================
 def invoke_and_print(agent, thread_id: str, user_id: str, user_content: str) -> None:
     """发送一轮消息，并打印模型回复。
 
@@ -146,6 +164,9 @@ def invoke_and_print(agent, thread_id: str, user_id: str, user_content: str) -> 
     print("-" * 60)
 
 
+# =====================================================================
+# 7. 跑完整演示 —— 同一用户的长期记忆跨线程可读
+# =====================================================================
 def main() -> None:
     """演示同一用户的长期记忆可以跨 thread_id 读取。"""
     memory_agent = build_agent()
