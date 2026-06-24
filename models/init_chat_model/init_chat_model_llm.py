@@ -10,6 +10,10 @@ from langchain_core.language_models import BaseChatModel
 from env_utils import DEEPSEEK_API_KEY, DEEPSEEK_BASE_URL
 
 
+# =====================================================================
+# 1. 创建共享模型 —— 供项目内普通示例统一复用
+# =====================================================================
+
 deepseek_llm: BaseChatModel = init_chat_model(
     model="DeepSeek-V4-Flash",
     model_provider="deepseek",
