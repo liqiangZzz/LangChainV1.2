@@ -6,7 +6,10 @@ from pydantic import BaseModel, Field
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
-# 1. 定义嵌套的 Pydantic 模型
+# =====================================================================
+# 1. 定义结构模型 —— 使用 Pydantic 描述嵌套电影信息
+# =====================================================================
+
 class Actor(BaseModel):
     name: str = Field(description="演员名称")
     role: str = Field(description="饰演的角色")
@@ -20,17 +23,31 @@ class Movie(BaseModel):
     rating: float = Field(description="电影评分")
 
 
-# 2. 初始化模型并绑定输出结构
+# =====================================================================
+# 2. 绑定结构化输出 —— 让模型按 Movie 结构返回
+# =====================================================================
+
 # 让 deepseek_llm 按照 Movie 这个结构返回结果
 # include_raw=True 表示结果里不仅包含解析后的结构化数据，还会保留模型原始返回内容。
 model_with_structured_output = deepseek_llm.with_structured_output(Movie, include_raw=True)
 
-# 3. 调用模型，直接获取 Movie 实例
-response = model_with_structured_output.invoke('请详细提取电影《泰坦尼克号》的信息。注意：必须包含上映年份、导演、完整的演员名单及角色、以及电影评分。')
+
+# =====================================================================
+# 3. 发起调用 —— 获取解析后的结构化结果
+# =====================================================================
+
+response = model_with_structured_output.invoke(
+    "请详细提取电影《泰坦尼克号》的信息。"
+    "注意：必须包含上映年份、导演、完整的演员名单及角色、以及电影评分。"
+)
 
 print(type(response))
 print(response)
 
+
+# =====================================================================
+# 4. 简单结构示例 —— 可按需切换为更小的 Movie 模型
+# =====================================================================
 
 # 简单结构
 # class Movie(BaseModel):
