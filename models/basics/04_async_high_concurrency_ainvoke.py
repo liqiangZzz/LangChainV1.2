@@ -1,7 +1,3 @@
-import asyncio
-
-from models.init_chat_model.init_chat_model_llm import deepseek_llm
-
 """
 异步调用
 非阻塞，适合高并发场景。
@@ -11,6 +7,15 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 2. deepseek_llm 已经提供 ainvoke 异步接口，可以直接交给事件循环调度。
 3. 协程在单线程内切换，创建和调度成本通常比线程更低。
 """
+import asyncio
+
+from models.init_chat_model.init_chat_model_llm import deepseek_llm
+
+
+# =====================================================================
+# 1. 单个异步调用示例 —— ainvoke 需要在 async 函数中 await
+# =====================================================================
+
 # async def async_call():
 #     response = await deepseek_llm.ainvoke("请用一句话介绍什么是机器学习")
 #     return  response
@@ -21,10 +26,9 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 # print(result)
 
 
-"""
-高并发：同时发多个 ainvoke
-"""
-
+# =====================================================================
+# 2. 单个并发任务 —— 每个问题对应一次独立 ainvoke
+# =====================================================================
 
 async def process_one(question: str, index: int):
     """处理单个请求
@@ -46,6 +50,10 @@ async def process_one(question: str, index: int):
     return response
 
 
+# =====================================================================
+# 3. 高并发入口 —— 使用 asyncio.gather 同时调度多个请求
+# =====================================================================
+
 async def high_concurrency():
     questions = [
         "什么是深度学习？",
@@ -66,6 +74,10 @@ async def high_concurrency():
     for i, r in enumerate(responses):
         print(f"\n最终结果 {i}: {r.content[:50]}...")
 
+
+# =====================================================================
+# 4. 运行示例 —— 启动事件循环执行异步任务
+# =====================================================================
 
 # asyncio.run 用来启动事件循环，并运行最外层的异步入口函数。
 asyncio.run(high_concurrency())
