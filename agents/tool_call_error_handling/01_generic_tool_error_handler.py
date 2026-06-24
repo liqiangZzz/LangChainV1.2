@@ -15,6 +15,10 @@ from langgraph.prebuilt.tool_node import ToolCallRequest
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义可能失败的工具 —— 模拟外部股票服务异常
+# =====================================================================
+
 @tool
 def get_stock_price(symbol: str) -> str:
     """获取指定股票代码的当前价格。
@@ -48,6 +52,10 @@ def get_stock_price(symbol: str) -> str:
         raise Exception(f"查询股票数据失败: {str(e)}")
 
 
+# =====================================================================
+# 2. 编写工具调用 middleware —— 把异常转换为 ToolMessage
+# =====================================================================
+
 # wrap_tool_call 会包裹 Agent 发起的每一次工具调用。
 # handler 代表原本的工具执行逻辑，调用 handler(request) 才会真正执行工具。
 @wrap_tool_call
@@ -76,6 +84,10 @@ def handle_tool_call_error(request: ToolCallRequest, handler):
         )
 
 
+# =====================================================================
+# 3. 创建 Agent —— 注册工具和统一错误处理 middleware
+# =====================================================================
+
 # 将错误处理 middleware 挂载到 Agent。
 # 当模型选择 get_stock_price 后，工具执行会先经过 handle_tool_call_error。
 agent = create_agent(
@@ -84,6 +96,11 @@ agent = create_agent(
     system_prompt="你是一个助手，你可以查询股票价格。",
     middleware=[handle_tool_call_error],
 )
+
+
+# =====================================================================
+# 4. 发起调用 —— 观察工具异常如何变成模型可读的错误消息
+# =====================================================================
 
 # 完整执行过程：
 # 1. DeepSeek 根据用户问题生成 get_stock_price(symbol="TCEHY") 工具调用。
