@@ -15,6 +15,10 @@ from pydantic import BaseModel, Field, field_validator
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义参数模型 —— 用 Pydantic 描述工具入参和校验规则
+# =====================================================================
+
 class TicketQueryInput(BaseModel):
     """定义 query_tickets 工具接收的参数结构和校验规则。"""
 
@@ -60,6 +64,10 @@ class TicketQueryInput(BaseModel):
 
         return value
 
+
+# =====================================================================
+# 2. 定义工具 —— 使用 args_schema 绑定 Pydantic 参数模型
+# =====================================================================
 
 # args_schema 明确指定工具参数由 TicketQueryInput 描述和验证。
 # 如果不指定，LangChain 只会根据 query_tickets 的函数签名推断参数结构。
@@ -118,6 +126,10 @@ def query_tickets(
         return f"查询工单时发生错误：{str(e)}"
 
 
+# =====================================================================
+# 3. 创建 Agent —— 注册强类型工单查询工具
+# =====================================================================
+
 # 将带 Pydantic 参数 Schema 的工具注册到 Agent。
 # 当用户描述查询条件时，模型会生成 query_tickets 对应的结构化参数。
 agent = create_agent(
@@ -125,6 +137,11 @@ agent = create_agent(
     tools=[query_tickets],
     system_prompt=SystemMessage(content="你是一个助手，你可以查询工单系统的工单信息。"),
 )
+
+
+# =====================================================================
+# 4. 准备测试调用 —— 可按需要打开不同查询场景
+# =====================================================================
 
 # response1 = agent.invoke({  # type: ignore
 #     "messages": [{"role": "user", "content": "请帮我查一下TK2025012001工单的详细信息"}]
@@ -150,6 +167,10 @@ agent = create_agent(
 # })
 # print("response4 content", response4["messages"][-1].content)
 
+
+# =====================================================================
+# 5. 运行校验示例 —— 观察 Pydantic 如何约束模型生成参数
+# =====================================================================
 
 # 测试 Pydantic 参数验证：
 # 用户输入的是小写 tk，模型如果原样生成该参数，会触发 ticket_id 的大写校验。
