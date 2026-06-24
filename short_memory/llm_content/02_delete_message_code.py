@@ -34,6 +34,9 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 MAX_MESSAGES_BEFORE_MODEL = 3
 
 
+# =====================================================================
+# 1. 生成删除指令 —— RemoveMessage 只带 id，不搬运消息内容
+# =====================================================================
 def build_delete_messages(messages: list[BaseMessage]) -> list[RemoveMessage]:
     """构造要删除的 RemoveMessage 列表。
 
@@ -64,6 +67,9 @@ def build_delete_messages(messages: list[BaseMessage]) -> list[RemoveMessage]:
     return delete_messages
 
 
+# =====================================================================
+# 2. 打印消息摘要 —— 聚焦 type/content，别被 metadata 淹没
+# =====================================================================
 def print_messages_summary(title: str, messages: list[BaseMessage]) -> None:
     """只打印消息类型和内容，避免输出 response_metadata 影响阅读。
 
@@ -78,6 +84,9 @@ def print_messages_summary(title: str, messages: list[BaseMessage]) -> None:
         print(f"{index} -> {message.type}: {message.content}")
 
 
+# =====================================================================
+# 3. before_model 删除旧消息 —— 精准移除超出上限的历史
+# =====================================================================
 @before_model
 def delete_old_messages_before_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
     """模型调用前删除较早的 messages，避免上下文持续增长。
@@ -121,6 +130,9 @@ def delete_old_messages_before_model(state: AgentState, runtime: Runtime) -> Dic
     return {"messages": delete_messages}
 
 
+# =====================================================================
+# 4. 创建 Agent —— 把删除策略挂到模型调用前
+# =====================================================================
 def build_agent():
     """按项目常用方式创建带 Delete Message 能力的 Agent。"""
     return create_agent(
@@ -134,6 +146,9 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 5. 查看当前记忆 —— 删除后真实 state 以这里为准
+# =====================================================================
 def print_state_messages(agent, config: dict) -> None:
     """打印当前 thread_id 下实际保存的短期记忆。
 
@@ -151,6 +166,9 @@ def print_state_messages(agent, config: dict) -> None:
     print("[当前短期记忆 messages_count]", {"messages_count": len(messages)})
 
 
+# =====================================================================
+# 6. 封装单轮调用 —— 每轮都输出回复和短期记忆
+# =====================================================================
 def invoke_and_print(agent, config: dict, user_content: str) -> None:
     """发送一轮用户消息，并打印模型回复和当前短期记忆。
 
@@ -174,6 +192,9 @@ def invoke_and_print(agent, config: dict, user_content: str) -> None:
     print("-" * 60)
 
 
+# =====================================================================
+# 7. 运行三轮演示 —— 第三轮进入模型前删除最早消息
+# =====================================================================
 def main() -> None:
     """连续三轮调用 Agent，观察旧消息何时被删除。"""
     agent = build_agent()

@@ -35,6 +35,9 @@ SUMMARY_TRIGGER = ("messages", 4)
 SUMMARY_KEEP = ("messages", 2)
 
 
+# =====================================================================
+# 1. 打印消息摘要 —— 只看角色和内容，方便观察内置摘要效果
+# =====================================================================
 def print_messages_summary(title: str, messages: list[BaseMessage]) -> None:
     """只打印消息类型和内容，方便观察摘要前后的短期记忆。
 
@@ -47,6 +50,9 @@ def print_messages_summary(title: str, messages: list[BaseMessage]) -> None:
         print(f"{index} ---> {message.type}: {message.content}")
 
 
+# =====================================================================
+# 2. 创建 Agent —— 交给内置 SummarizationMiddleware 自动摘要
+# =====================================================================
 def build_agent():
     """按项目常用方式创建带内置 SummarizationMiddleware 的 Agent。"""
     return create_agent(
@@ -79,6 +85,9 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 3. 查看当前记忆 —— middleware 处理后的 messages 会保存在这里
+# =====================================================================
 def print_state_messages(agent, config: dict) -> None:
     """打印当前 thread_id 下由 checkpointer 保存的短期记忆。
 
@@ -92,6 +101,9 @@ def print_state_messages(agent, config: dict) -> None:
     print(f"[当前短期记忆] messages_count={len(messages)}")
 
 
+# =====================================================================
+# 4. 封装单轮调用 —— 每轮观察一次自动摘要后的状态
+# =====================================================================
 def invoke_and_print(agent, config: dict, user_content: str) -> None:
     """发送一轮用户消息，并打印模型回复和当前短期记忆。
 
@@ -113,6 +125,9 @@ def invoke_and_print(agent, config: dict, user_content: str) -> None:
     print("-" * 60)
 
 
+# =====================================================================
+# 5. 运行三轮演示 —— 让内置 middleware 自己判断何时摘要
+# =====================================================================
 def main() -> None:
     """连续三轮调用 Agent，观察内置 middleware 何时自动摘要。"""
     agent = build_agent()

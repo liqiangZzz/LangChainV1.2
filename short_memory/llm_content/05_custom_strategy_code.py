@@ -54,6 +54,9 @@ IMPORTANT_KEYWORDS = (
 )
 
 
+# =====================================================================
+# 1. 判断关键消息 —— 命中业务关键词就尽量保留
+# =====================================================================
 def is_important_message(message: BaseMessage) -> bool:
     """判断一条消息是否应该被自定义策略保留。
 
@@ -71,6 +74,9 @@ def is_important_message(message: BaseMessage) -> bool:
     return any(keyword in content for keyword in IMPORTANT_KEYWORDS)
 
 
+# =====================================================================
+# 2. 消息去重 —— 合并关键消息和最近消息时保持原顺序
+# =====================================================================
 def deduplicate_messages(messages: list[BaseMessage]) -> list[BaseMessage]:
     """按 message.id 去重，并保持原有顺序。
 
@@ -93,6 +99,9 @@ def deduplicate_messages(messages: list[BaseMessage]) -> list[BaseMessage]:
     return deduplicated_messages
 
 
+# =====================================================================
+# 3. 应用自定义策略 —— 业务关键消息 + 最近上下文
+# =====================================================================
 def apply_custom_strategy(messages: list[BaseMessage]) -> list[BaseMessage]:
     """应用自定义消息保留策略。
 
@@ -136,6 +145,9 @@ def apply_custom_strategy(messages: list[BaseMessage]) -> list[BaseMessage]:
     return selected_messages
 
 
+# =====================================================================
+# 4. 打印消息摘要 —— 用来源标签看清策略筛选过程
+# =====================================================================
 def print_messages_summary(title: str, messages: list[BaseMessage], source: str = "") -> None:
     """只打印消息类型和内容，方便观察自定义策略保留了什么。
 
@@ -156,6 +168,9 @@ def print_messages_summary(title: str, messages: list[BaseMessage], source: str 
         print(f"{index} ---> {source_text}{message.type}: {message.content}")
 
 
+# =====================================================================
+# 5. before_model 执行策略 —— 清空旧历史后写回精选消息
+# =====================================================================
 @before_model
 def custom_strategy_before_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
     """模型调用前应用自定义消息保留策略。
@@ -192,6 +207,9 @@ def custom_strategy_before_model(state: AgentState, runtime: Runtime) -> Dict[st
     return {"messages": [RemoveMessage(id=REMOVE_ALL_MESSAGES), *selected_messages]}
 
 
+# =====================================================================
+# 6. 创建 Agent —— 把业务消息保留策略挂到模型调用前
+# =====================================================================
 def build_agent():
     """按项目常用方式创建带自定义策略的 Agent。"""
     return create_agent(
@@ -205,6 +223,9 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 7. 查看当前记忆 —— 确认策略最终保留了哪些消息
+# =====================================================================
 def print_state_messages(agent, config: dict) -> None:
     """打印当前 thread_id 下实际保存的短期记忆。
 
@@ -221,6 +242,9 @@ def print_state_messages(agent, config: dict) -> None:
     print(f"[当前短期记忆] messages_count={len(messages)}")
 
 
+# =====================================================================
+# 8. 封装单轮调用 —— 每轮都打印回复和策略后的状态
+# =====================================================================
 def invoke_and_print(agent, config: dict, user_content: str) -> None:
     """发送一轮用户消息，并打印模型回复和当前短期记忆。
 
@@ -244,6 +268,9 @@ def invoke_and_print(agent, config: dict, user_content: str) -> None:
     print("-" * 60)
 
 
+# =====================================================================
+# 9. 运行多轮演示 —— 让普通消息和关键消息拉开差异
+# =====================================================================
 def main() -> None:
     """连续多轮调用 Agent，观察自定义策略如何保留业务关键消息。"""
     agent = build_agent()

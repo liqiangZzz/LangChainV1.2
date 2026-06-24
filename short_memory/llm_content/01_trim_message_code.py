@@ -32,6 +32,9 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 MAX_SHORT_MEMORY_MESSAGES = 4
 
 
+# =====================================================================
+# 1. 计算截断结果 —— 用 trim_messages 选出最近上下文
+# =====================================================================
 def trim_short_memory(messages: list[BaseMessage]) -> list[BaseMessage]:
     """保留最近对话，丢弃较早的短期记忆。
 
@@ -53,6 +56,9 @@ def trim_short_memory(messages: list[BaseMessage]) -> list[BaseMessage]:
     )
 
 
+# =====================================================================
+# 2. before_model 重写 messages —— 清空旧历史，再写回截断结果
+# =====================================================================
 @before_model
 def trim_messages_before_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
     """模型调用前截断短期记忆中的 messages。
@@ -85,6 +91,9 @@ def trim_messages_before_model(state: AgentState, runtime: Runtime) -> Dict[str,
     return {"messages": [RemoveMessage(id=REMOVE_ALL_MESSAGES), *trimmed_messages]}
 
 
+# =====================================================================
+# 3. 创建 Agent —— 每次调用模型前自动执行截断 middleware
+# =====================================================================
 def build_agent():
     """按项目常用方式创建带短期记忆截断能力的 Agent。"""
     return create_agent(
@@ -98,6 +107,9 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 4. 打印短期记忆 —— 看 checkpointer 里实际保存了哪些消息
+# =====================================================================
 def print_state_messages(agent, config: dict) -> None:
     """打印当前 checkpointer 中保存的消息数量。
 
@@ -117,6 +129,9 @@ def print_state_messages(agent, config: dict) -> None:
     )
 
 
+# =====================================================================
+# 5. 封装单轮调用 —— 一边聊天，一边观察记忆变化
+# =====================================================================
 def invoke_and_print(agent, config: dict, user_content: str) -> None:
     """发送一轮用户消息，并打印模型回复和当前记忆状态。
 
@@ -136,6 +151,9 @@ def invoke_and_print(agent, config: dict, user_content: str) -> None:
     print("-" * 60)
 
 
+# =====================================================================
+# 6. 运行三轮演示 —— 第三轮触发最近消息截断
+# =====================================================================
 def main() -> None:
     """连续多轮调用 Agent，观察消息历史如何被截断。"""
     agent = build_agent()

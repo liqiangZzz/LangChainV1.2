@@ -32,6 +32,9 @@ from models.init_chat_model.init_chat_model_llm import deepseek_llm
 MAX_RECENT_MESSAGES = 3
 
 
+# =====================================================================
+# 1. 整理摘要输入 —— 把旧消息排成摘要模型看得懂的文本
+# =====================================================================
 def format_messages_for_summary(messages: list[BaseMessage]) -> str:
     """把旧消息整理成摘要模型容易阅读的文本。
 
@@ -46,6 +49,9 @@ def format_messages_for_summary(messages: list[BaseMessage]) -> str:
     return "\n".join(lines)
 
 
+# =====================================================================
+# 2. 生成摘要消息 —— 额外调用一次模型压缩较早历史
+# =====================================================================
 def summarize_old_messages(old_messages: list[BaseMessage]) -> SystemMessage:
     """调用 DeepSeek，把较早的对话消息压缩成一条 SystemMessage 摘要。
 
@@ -77,6 +83,9 @@ def summarize_old_messages(old_messages: list[BaseMessage]) -> SystemMessage:
     return SystemMessage(content=f"较早对话摘要：{summary_response.content}")
 
 
+# =====================================================================
+# 3. 组装压缩后上下文 —— 摘要消息 + 最近原文消息
+# =====================================================================
 def build_summarized_messages(messages: list[BaseMessage]) -> list[BaseMessage]:
     """生成摘要后的 messages。
 
@@ -111,6 +120,9 @@ def build_summarized_messages(messages: list[BaseMessage]) -> list[BaseMessage]:
     return [summary_message, *recent_messages]
 
 
+# =====================================================================
+# 4. 打印消息摘要 —— 用来源标签看清消息流向
+# =====================================================================
 def print_messages_summary(title: str, messages: list[BaseMessage], source: str = "") -> None:
     """只打印消息类型和内容，避免 response_metadata 干扰观察。
 
@@ -131,6 +143,9 @@ def print_messages_summary(title: str, messages: list[BaseMessage], source: str 
         print(f"{index} ---> {source_text}{message.type}: {message.content}")
 
 
+# =====================================================================
+# 5. before_model 摘要旧历史 —— 清空旧 messages 后写入压缩结果
+# =====================================================================
 @before_model
 def summarize_messages_before_model(state: AgentState, runtime: Runtime) -> Dict[str, Any]:
     """模型调用前把较早消息摘要化，避免上下文持续增长。
@@ -171,6 +186,9 @@ def summarize_messages_before_model(state: AgentState, runtime: Runtime) -> Dict
     return {"messages": [RemoveMessage(id=REMOVE_ALL_MESSAGES), *summarized_messages]}
 
 
+# =====================================================================
+# 6. 创建 Agent —— 手写摘要策略接入模型调用前
+# =====================================================================
 def build_agent():
     """按项目常用方式创建带 Summarize Message 能力的 Agent。"""
     return create_agent(
@@ -184,6 +202,9 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 7. 查看当前记忆 —— 摘要后应该能看到 SystemMessage 摘要
+# =====================================================================
 def print_state_messages(agent, config: dict) -> None:
     """打印当前 thread_id 下实际保存的短期记忆。
 
@@ -199,6 +220,9 @@ def print_state_messages(agent, config: dict) -> None:
     print(f"[当前短期记忆] messages_count={len(messages)}")
 
 
+# =====================================================================
+# 8. 封装单轮调用 —— 一轮输入对应一次记忆观察
+# =====================================================================
 def invoke_and_print(agent, config: dict, user_content: str) -> None:
     """发送一轮用户消息，并打印模型回复和当前短期记忆。
 
@@ -222,6 +246,9 @@ def invoke_and_print(agent, config: dict, user_content: str) -> None:
     print("-" * 60)
 
 
+# =====================================================================
+# 9. 运行三轮演示 —— 第三轮触发旧消息摘要
+# =====================================================================
 def main() -> None:
     """连续三轮调用 Agent，观察旧消息如何被摘要压缩。"""
     agent = build_agent()
