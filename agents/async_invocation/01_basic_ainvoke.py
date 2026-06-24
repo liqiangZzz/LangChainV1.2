@@ -14,6 +14,10 @@ from langgraph.graph.state import CompiledStateGraph
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义示例工具 —— 天气、交通和景点查询
+# =====================================================================
+
 @tool
 def get_weather(city: str) -> str:
     """获取指定城市的模拟天气信息。
@@ -84,6 +88,10 @@ def get_scenic_spots(city: str, interest_type: str = "通用") -> str:
     return f"{city}{interest_type}景点：{recommendation}"
 
 
+# =====================================================================
+# 2. 创建 Agent —— 组合旅行规划需要的工具
+# =====================================================================
+
 def create_travel_agent() -> CompiledStateGraph:
     """创建能够查询天气、交通和景点信息的旅行规划 Agent。"""
     return create_agent(
@@ -95,6 +103,10 @@ def create_travel_agent() -> CompiledStateGraph:
         ),
     )
 
+
+# =====================================================================
+# 3. 异步调用 Agent —— 使用 await 等待完整状态
+# =====================================================================
 
 async def invoke_travel_agent() -> dict[str, Any]:
     """异步调用旅行规划 Agent，并返回包含完整消息历史的状态字典。"""
@@ -122,6 +134,10 @@ async def invoke_travel_agent() -> dict[str, Any]:
         }
     )
 
+
+# =====================================================================
+# 4. 运行示例 —— 用 asyncio.run 启动异步入口
+# =====================================================================
 
 if __name__ == "__main__":
     # asyncio.run() 负责创建事件循环并执行异步入口函数。
