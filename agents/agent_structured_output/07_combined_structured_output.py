@@ -13,6 +13,10 @@ from pydantic import BaseModel, Field
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义组合 Schema —— 用一个顶层模型同时承载两类信息
+# =====================================================================
+
 class ContactInfo(BaseModel):
     """从文本中提取的个人联系信息。"""
 
@@ -44,6 +48,10 @@ class CombinedInfo(BaseModel):
     )
 
 
+# =====================================================================
+# 2. 创建 Agent —— 让模型填写组合模型的可选子字段
+# =====================================================================
+
 def build_agent():
     """创建使用组合模型输出的结构化信息提取 Agent。"""
     return create_agent(
@@ -64,6 +72,10 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 3. 调用 Agent —— 返回 CombinedInfo 和消息历史
+# =====================================================================
+
 def extract_combined_information(user_text: str) -> tuple[CombinedInfo, list]:
     """提取组合信息，并返回结构化对象和完整消息历史。
 
@@ -77,6 +89,10 @@ def extract_combined_information(user_text: str) -> tuple[CombinedInfo, list]:
 
     return result["structured_response"], result["messages"]
 
+
+# =====================================================================
+# 4. 运行示例 —— 同时读取联系人和活动信息
+# =====================================================================
 
 if __name__ == "__main__":
     source_text = (

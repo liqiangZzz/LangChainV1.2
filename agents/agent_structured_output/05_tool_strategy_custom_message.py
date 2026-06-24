@@ -14,6 +14,10 @@ from pydantic import BaseModel, Field
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义 Schema —— 提取联系人信息
+# =====================================================================
+
 class ContactInfo(BaseModel):
     """从用户文本中提取的个人联系信息。"""
 
@@ -23,6 +27,10 @@ class ContactInfo(BaseModel):
     email: str = Field(description="电子邮箱地址")
     phone: str = Field(description="电话号码")
 
+
+# =====================================================================
+# 2. 创建 Agent —— 自定义结构化输出成功后的 ToolMessage
+# =====================================================================
 
 def build_agent():
     """创建带自定义结构化输出 ToolMessage 的信息提取 Agent。"""
@@ -47,6 +55,10 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 3. 调用 Agent —— 同时返回结构化对象和完整消息历史
+# =====================================================================
+
 def extract_contact_info(user_text: str) -> tuple[ContactInfo, list]:
     """调用 Agent，并返回结构化联系人对象和完整消息历史。
 
@@ -63,6 +75,10 @@ def extract_contact_info(user_text: str) -> tuple[ContactInfo, list]:
     # messages 中可以观察 HumanMessage、AIMessage 和自定义内容的 ToolMessage。
     return contact_info, result["messages"]
 
+
+# =====================================================================
+# 4. 运行示例 —— 观察自定义 ToolMessage 和最终结构
+# =====================================================================
 
 if __name__ == "__main__":
     contact_info, messages = extract_contact_info(

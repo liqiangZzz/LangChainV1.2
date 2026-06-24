@@ -21,6 +21,10 @@ from pydantic import BaseModel, Field
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义错误处理函数 —— 按异常类型生成重试提示
+# =====================================================================
+
 def custom_error_handler(error: Exception) -> str:
     """根据结构化输出错误类型，返回给模型不同的修正提示。
 
@@ -48,6 +52,10 @@ def custom_error_handler(error: Exception) -> str:
     return f"结构化输出发生错误：{error_str}。请修正后重试。"
 
 
+# =====================================================================
+# 2. 定义 Schema —— 故意设置严格字段约束
+# =====================================================================
+
 class ProductEvaluation(BaseModel):
     """产品评价的结构化分析结果。"""
 
@@ -58,6 +66,10 @@ class ProductEvaluation(BaseModel):
         description="评价的情感倾向",
     )
 
+
+# =====================================================================
+# 3. 创建 Agent —— 将自定义函数传给 handle_errors
+# =====================================================================
 
 def build_agent():
     """创建使用自定义结构化输出错误处理器的产品评价 Agent。"""
@@ -80,6 +92,10 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 4. 调用 Agent —— 返回修正后的结构化评价
+# =====================================================================
+
 def analyze_product_review(user_text: str) -> tuple[ProductEvaluation, list]:
     """分析产品评价，并返回结构化结果和完整消息历史。
 
@@ -93,6 +109,10 @@ def analyze_product_review(user_text: str) -> tuple[ProductEvaluation, list]:
 
     return response["structured_response"], response["messages"]
 
+
+# =====================================================================
+# 5. 运行示例 —— 观察校验失败、错误提示和模型重试
+# =====================================================================
 
 if __name__ == "__main__":
     evaluation, messages = analyze_product_review(

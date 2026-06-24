@@ -14,6 +14,10 @@ from langchain_core.tools import tool
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义工具和 dataclass Schema —— 使用标准库数据类描述输出
+# =====================================================================
+
 @tool
 def search_customer_database(query: str) -> str:
     """在模拟客户数据库中搜索客户信息。
@@ -80,6 +84,10 @@ class CustomerAnalysis:
     )
 
 
+# =====================================================================
+# 2. 创建 Agent —— ToolStrategy 读取 dataclass 字段和 metadata
+# =====================================================================
+
 def build_agent():
     """创建使用 dataclass 结构化输出的客户分析 Agent。"""
     return create_agent(
@@ -101,6 +109,10 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 3. 调用 Agent —— 返回 dataclass 结构化结果
+# =====================================================================
+
 def analyze_customer(user_query: str) -> CustomerAnalysis:
     """调用 Agent，并返回按照 CustomerAnalysis 构造的数据类实例。
 
@@ -115,6 +127,10 @@ def analyze_customer(user_query: str) -> CustomerAnalysis:
     # 配置 response_format 后，结构化结果位于 structured_response。
     return result["structured_response"]
 
+
+# =====================================================================
+# 4. 运行示例 —— 使用 asdict 转换 dataclass
+# =====================================================================
 
 if __name__ == "__main__":
     analysis = analyze_customer("请分析客户李四")

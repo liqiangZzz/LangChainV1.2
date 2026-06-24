@@ -14,6 +14,10 @@ from pydantic import BaseModel, Field
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义工具和 Pydantic Schema —— 查询客户并约束最终输出
+# =====================================================================
+
 @tool
 def search_customer_database(query: str) -> str:
     """在模拟客户数据库中搜索客户信息。
@@ -73,6 +77,10 @@ class CustomerAnalysis(BaseModel):
     )
 
 
+# =====================================================================
+# 2. 创建 Agent —— 使用 ToolStrategy 生成结构化结果
+# =====================================================================
+
 def build_agent():
     """创建具有工具调用和 Pydantic 结构化输出能力的客户分析 Agent。"""
     return create_agent(
@@ -94,6 +102,10 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 3. 调用 Agent —— 从 structured_response 读取 Pydantic 对象
+# =====================================================================
+
 def analyze_customer(user_query: str) -> CustomerAnalysis:
     """调用 Agent 并返回经过 Pydantic 校验的客户分析结果。
 
@@ -109,6 +121,10 @@ def analyze_customer(user_query: str) -> CustomerAnalysis:
     # 配置 response_format 后，成功的结构化结果保存在 structured_response 中。
     return result["structured_response"]
 
+
+# =====================================================================
+# 4. 运行示例 —— 打印对象和过滤空值后的字典
+# =====================================================================
 
 if __name__ == "__main__":
     analysis = analyze_customer(

@@ -24,6 +24,10 @@ from pydantic import BaseModel, Field
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义多个候选 Schema —— Union 表示最终结果二选一
+# =====================================================================
+
 class ContactInfo(BaseModel):
     """从文本中提取的个人联系信息。"""
 
@@ -39,6 +43,10 @@ class EventDetails(BaseModel):
     # 避免 Pydantic 将字段名称 date 与导入的 date 类型混淆。
     date: datetime.date = Field(description="活动日期")
 
+
+# =====================================================================
+# 2. 创建 Agent —— 配置 handle_errors 的不同策略
+# =====================================================================
 
 def build_agent(handle_errors: bool | str = True):
     """创建支持多个候选结构和错误重试的信息提取 Agent。
@@ -69,6 +77,10 @@ def build_agent(handle_errors: bool | str = True):
     )
 
 
+# =====================================================================
+# 3. 调用 Agent —— 观察结构化输出错误后的重试结果
+# =====================================================================
+
 def extract_information(
     user_text: str,
     handle_errors: bool | str = True,
@@ -87,6 +99,10 @@ def extract_information(
     # 自动重试成功后，最终结构化对象保存在 structured_response 中。
     return result["structured_response"], result["messages"]
 
+
+# =====================================================================
+# 4. 运行示例 —— 故意输入两类信息触发候选 Schema 选择
+# =====================================================================
 
 if __name__ == "__main__":
     # 这段文本故意同时包含两种 Schema 的字段，用于观察模型是否会一次生成

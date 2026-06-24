@@ -11,6 +11,10 @@ from langchain_core.tools import tool
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义工具和 JSON Schema —— 不依赖 Python 数据模型类
+# =====================================================================
+
 @tool
 def search_customer_database(query: str) -> str:
     """在模拟客户数据库中搜索客户信息。
@@ -86,6 +90,10 @@ customer_analysis_schema = {
 }
 
 
+# =====================================================================
+# 2. 创建 Agent —— 直接把 JSON Schema 交给 ToolStrategy
+# =====================================================================
+
 def build_agent():
     """创建使用 JSON Schema 结构化输出的客户分析 Agent。"""
     return create_agent(
@@ -107,6 +115,10 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 3. 调用 Agent —— 返回符合 Schema 的普通字典
+# =====================================================================
+
 def analyze_customer(user_query: str) -> dict:
     """调用 Agent，并返回符合 JSON Schema 的普通字典。
 
@@ -121,6 +133,10 @@ def analyze_customer(user_query: str) -> dict:
     # 配置 response_format 后，结构化结果保存在 structured_response。
     return result["structured_response"]
 
+
+# =====================================================================
+# 4. 运行示例 —— 安全读取可选字段
+# =====================================================================
 
 if __name__ == "__main__":
     analysis = analyze_customer("请分析客户张三")

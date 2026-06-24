@@ -17,6 +17,10 @@ from pydantic import BaseModel, Field
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义 Callable 类型和退款审核 Schema
+# =====================================================================
+
 HandleErrorsCallable = Callable[[Exception], str]
 
 
@@ -28,6 +32,10 @@ class RefundDecision(BaseModel):
     reason: str = Field(description="退款审核原因")
     risk_level: Literal["低", "中", "高"] = Field(description="退款风险等级")
 
+
+# =====================================================================
+# 2. 定义 Callable 错误处理器 —— 将异常转换为模型重试提示
+# =====================================================================
 
 def refund_error_handler(error: Exception) -> str:
     """把结构化输出异常转换成模型可理解的重试提示。
@@ -49,6 +57,10 @@ def refund_error_handler(error: Exception) -> str:
 
     return f"结构化输出失败：{error}。请按 RefundDecision Schema 重新生成。"
 
+
+# =====================================================================
+# 3. 创建 Agent —— 显式传入 Callable[[Exception], str]
+# =====================================================================
 
 def build_agent():
     """创建使用 Callable 自定义 handle_errors 的退款审核 Agent。"""
@@ -73,6 +85,10 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 4. 调用 Agent —— 返回退款审核结构化结果
+# =====================================================================
+
 def review_refund(user_text: str) -> tuple[RefundDecision, list]:
     """执行退款审核，并返回结构化结果和完整消息历史。
 
@@ -86,6 +102,10 @@ def review_refund(user_text: str) -> tuple[RefundDecision, list]:
 
     return result["structured_response"], result["messages"]
 
+
+# =====================================================================
+# 5. 运行示例 —— 观察 Callable 处理非法 risk_level
+# =====================================================================
 
 if __name__ == "__main__":
     decision, messages = review_refund(

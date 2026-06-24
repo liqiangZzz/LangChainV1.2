@@ -13,6 +13,10 @@ from langchain_core.tools import tool
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 
+# =====================================================================
+# 1. 定义工具和 TypedDict Schema —— 输出保持普通 dict
+# =====================================================================
+
 @tool
 def search_customer_database(query: str) -> str:
     """在模拟客户数据库中搜索客户信息。
@@ -68,6 +72,10 @@ class CustomerAnalysis(TypedDict, total=False):
     email_sent: Annotated[bool, "是否已经成功调用工具发送感谢邮件"]
 
 
+# =====================================================================
+# 2. 创建 Agent —— ToolStrategy 根据 TypedDict 生成 Schema
+# =====================================================================
+
 def build_agent():
     """创建使用 TypedDict 结构化输出的客户分析 Agent。"""
     return create_agent(
@@ -89,6 +97,10 @@ def build_agent():
     )
 
 
+# =====================================================================
+# 3. 调用 Agent —— 从 structured_response 读取字典
+# =====================================================================
+
 def analyze_customer(user_query: str) -> CustomerAnalysis:
     """调用 Agent，并返回符合 CustomerAnalysis 结构的普通字典。
 
@@ -103,6 +115,10 @@ def analyze_customer(user_query: str) -> CustomerAnalysis:
     # 配置 response_format 后，结构化结果位于 structured_response。
     return result["structured_response"]
 
+
+# =====================================================================
+# 4. 运行示例 —— 直接读取 TypedDict 字段
+# =====================================================================
 
 if __name__ == "__main__":
     analysis = analyze_customer("请分析客户李四")
