@@ -2,14 +2,13 @@
 模型类初始化示例包。
 
 本包演示不通过 init_chat_model，而是直接使用具体模型类创建聊天模型实例。
-当前示例使用 ChatDeepSeek 和 ChatOpenAI 两种类来连接 DeepSeek 兼容接口。
+当前示例使用 ChatDeepSeek 连接 DeepSeek 服务，并保留 ChatOpenAI 兼容写法供对照。
 
 主要文件：
 
 - model_instances.py
-  创建两个模型实例：
-  deepseek_llm 使用 ChatDeepSeek，并通过 api_base 指定服务地址；
-  deepseek_llm2 使用 ChatOpenAI，并通过 DeepSeek 的 base_url 访问 DeepSeek 模型。
+  使用 ChatDeepSeek 创建 deepseek_llm，并通过 api_base 指定服务地址；
+  同时保留 ChatOpenAI 兼容 DeepSeek 接口的注释示例，便于对比不同模型类写法。
 
 - invoke_model.py
   导入已创建好的模型实例并发起一次 invoke 调用，用于验证模型连接和基础对话。
