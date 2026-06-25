@@ -2,12 +2,11 @@
 Agent 快速开始示例。
 
 本文件用一个天气查询工具演示最基础的 create_agent + invoke 流程。
-运行会调用真实 DeepSeek 模型，执行前需要确认 .env 中配置了 DeepSeek 信息。
 """
-from langchain.tools import tool
 from langchain.agents import create_agent
+from langchain.tools import tool
 
-from models.init_chat_model.init_chat_model_llm import deepseek_llm
+from models.init_chat_model.init_chat_model_llm import glm_llm
 
 
 # =====================================================================
@@ -28,7 +27,7 @@ def get_weather(city: str):
 # 2. 创建 Agent —— 绑定模型、工具和系统提示词
 # =====================================================================
 agent = create_agent(
-    model=deepseek_llm,
+    model=glm_llm,
     tools=[get_weather],
     system_prompt='你是一个助手，你可以查询城市的天气。'
 )

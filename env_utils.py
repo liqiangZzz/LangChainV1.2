@@ -30,6 +30,12 @@ DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY')
 DEEPSEEK_BASE_URL = os.getenv('DEEPSEEK_BASE_URL')
 
 
+# GLM API 密钥
+GLM_API_KEY = os.getenv('GLM_API_KEY')
+
+# GLM API 基础 URL
+GLM_BASE_URL = os.getenv('GLM_BASE_URL')
+
 # =====================================================================
 # 3. 导出数据库配置 —— MySQL 记忆示例统一复用
 # =====================================================================
