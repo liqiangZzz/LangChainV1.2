@@ -157,9 +157,9 @@ python -m human_in_the_loop.01_human_in_the_loop_middleware
 
 ```bash
 python -m agents.agent_structured_output.01_pydantic_tool_strategy
-python -m agents.agent_structured_output.06_tool_strategy_error_handling
+python -m agents.agent_structured_output.06_union_structured_output_auto_retry
 python -m agents.agent_structured_output.07_combined_structured_output
-python -m agents.agent_structured_output.08_tool_strategy_custom_error_handler
+python -m agents.agent_structured_output.08_tool_strategy_custom_handle_errors
 ```
 
 ### Agent 异步调用

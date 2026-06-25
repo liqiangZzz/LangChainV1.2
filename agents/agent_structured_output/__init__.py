@@ -27,9 +27,9 @@ Agent 结构化输出示例包。
    使用 ToolStrategy 的 tool_message_content 自定义结构化输出成功后写入消息历史的
    ToolMessage，同时配置 handle_errors=False，说明如何关闭结构化输出错误的自动重试。
 
-6. 06_tool_strategy_error_handling.py
-   使用 Union 提供多个候选 Schema，演示模型一次返回多个结构化结果时，
-   handle_errors=True、固定字符串和 False 的处理差异。
+6. 06_union_structured_output_auto_retry.py
+   使用 Union 提供多个候选 Schema，演示结构化输出只能二选一时，
+   handle_errors=True、固定字符串和 False 对自动重试流程的影响。
 
 7. 07_combined_structured_output.py
    使用唯一的组合模型同时承载联系人和活动信息，说明需要同时返回多类数据时，
@@ -47,7 +47,7 @@ Agent 结构化输出示例包。
 
 - 请从项目根目录使用模块方式运行，例如：
   python -m agents.agent_structured_output.01_pydantic_tool_strategy
-  python -m agents.agent_structured_output.06_tool_strategy_error_handling
+  python -m agents.agent_structured_output.06_union_structured_output_auto_retry
   python -m agents.agent_structured_output.08_tool_strategy_custom_handle_errors
   python -m agents.agent_structured_output.09_tool_strategy_callable_handle_errors
 
