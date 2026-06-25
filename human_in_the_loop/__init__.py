@@ -27,8 +27,17 @@ Human-in-the-loop 人工介入示例包。
 - 07_hitl_comprehensive_demo.py
   文件管理助手综合示例，用虚拟文件系统串联 approve / reject / edit / respond 四种决策。
 
+运行方式：
+
+- 请从项目根目录使用模块方式运行，例如：
+  python -m human_in_the_loop.01_human_in_the_loop_middleware
+  python -m human_in_the_loop.02_hitl_approve_reject_demo
+  python -m human_in_the_loop.05_hitl_approve_reject_edit_respond_demo
+  python -m human_in_the_loop.07_hitl_comprehensive_demo
+
 运行注意事项：
 
 - 多数示例会在模块顶层调用真实模型，运行前注意 API 额度、网络和环境变量配置。
+- 多数示例包含 input(...) 人工决策步骤，需要在交互式终端中运行。
 - 本包不在 `__init__.py` 中导入示例模块，避免导入包时触发真实 LLM 请求。
 """

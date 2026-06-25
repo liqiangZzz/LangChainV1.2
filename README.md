@@ -7,6 +7,7 @@
 - 基础模型调用、流式输出、批处理和异步调用
 - 模型初始化、运行时配置、限流与回调
 - 工具调用和 Agent
+- Human-in-the-loop 人工介入审批
 - Pydantic、TypedDict、JSON Schema 等结构化输出
 - 静态提示词、动态提示词和 Agent middleware
 
@@ -31,6 +32,7 @@ LangChain 的 `init_chat_model` 统一入口创建，并集中定义在
 ├── short_memory/     # Agent 短期记忆与 checkpoint 示例
 │   └── llm_content/  # LLM 上下文消息截断、删除、摘要和自定义策略示例
 ├── long_memory/      # Agent 长期记忆、Store 和跨会话偏好示例
+├── human_in_the_loop/  # Agent 人工介入审批与恢复执行示例
 ├── docs/skills/      # 项目文档维护 skill
 ├── scripts/          # 文档审计与维护辅助脚本
 ├── env_utils.py      # 加载 DeepSeek 和 MySQL 环境变量
@@ -89,6 +91,7 @@ python -m agents.streaming.01_stream_updates
 python -m agents.agent_structured_output.01_pydantic_tool_strategy
 python -m agents.tool_creation.01_create_tool
 python -m agents.tool_call_error_handling.01_generic_tool_error_handler
+python -m human_in_the_loop.01_human_in_the_loop_middleware
 ```
 
 ## 学习模块
@@ -219,6 +222,28 @@ python -m agents.tool_call_error_handling.01_generic_tool_error_handler
 python -m agents.tool_call_error_handling.02_exception_specific_tool_error_handler
 ```
 
+### Human-in-the-loop 人工介入
+
+`human_in_the_loop/` 演示使用 `HumanInTheLoopMiddleware` 在敏感工具执行前暂停
+Agent，并通过人工决策恢复执行：
+
+- `01_human_in_the_loop_middleware.py`：基础示例，读取文件直接放行，删除文件前触发审批
+- `02_hitl_approve_reject_demo.py`：演示 approve / reject 两种决策
+- `03_hitl_approve_reject_edit_demo.py`：演示 edit，在工具执行前修改参数
+- `04_hitl_approve_reject_respond_demo.py`：演示 respond，由人工直接提供工具结果
+- `05_hitl_approve_reject_edit_respond_demo.py`：组合演示四种决策
+- `06_hitl_multi_descisions_demo.py`：演示一次中断中处理多个工具调用决策
+- `07_hitl_comprehensive_demo.py`：文件管理助手综合示例，使用虚拟文件系统避免真实磁盘操作
+
+可以从项目根目录按模块运行：
+
+```bash
+python -m human_in_the_loop.01_human_in_the_loop_middleware
+python -m human_in_the_loop.02_hitl_approve_reject_demo
+python -m human_in_the_loop.05_hitl_approve_reject_edit_respond_demo
+python -m human_in_the_loop.07_hitl_comprehensive_demo
+```
+
 ### Agent 短期记忆
 
 `short_memory/` 演示 Agent 如何通过 checkpointer 保存同一会话中的消息状态：
@@ -255,6 +280,8 @@ python -m agents.tool_call_error_handling.02_exception_specific_tool_error_handl
 - Agent 结构化输出发生 Schema 校验错误并自动重试时，也会增加模型调用次数。
 - `tool_call_error_handling/01_generic_tool_error_handler.py` 会访问模拟失败的外部接口；
   `02_exception_specific_tool_error_handler.py` 包含随机异常，因此重复运行的结果可能不同。
+- `human_in_the_loop/` 示例会在敏感工具调用前暂停，并通过 `input(...)` 等方式等待人工决策；
+  请在交互式终端中运行，并保持同一个 `thread_id` 恢复中断流程。
 - 本项目统一使用 `DeepSeek-V4-Flash`。普通示例通常关闭思考模式；推理示例会显式开启
   思考模式，运行前注意额度消耗。
 - 请从项目根目录运行脚本或使用 `python -m <模块路径>`，以确保可以正确导入
