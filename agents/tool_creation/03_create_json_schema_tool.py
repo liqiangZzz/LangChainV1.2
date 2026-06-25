@@ -13,7 +13,6 @@ from langchain_core.tools import tool
 
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
-
 # =====================================================================
 # 1. 定义 JSON Schema —— 直接描述工具参数结构
 # =====================================================================

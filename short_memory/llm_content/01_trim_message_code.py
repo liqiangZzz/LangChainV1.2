@@ -24,7 +24,6 @@ from langgraph.runtime import Runtime
 
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
-
 # 这里演示“按消息条数截断”：最多保留最近 4 条消息。
 # 由于 DeepSeek-V4-Flash 当前没有实现 get_num_tokens_from_messages()，
 # 示例不做不准确的 token 估算，而是用 len 作为 token_counter。

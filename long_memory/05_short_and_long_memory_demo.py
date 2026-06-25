@@ -15,8 +15,8 @@
 2. 安装 MySQL 相关依赖。
 3. 确认 .env 中配置了 DeepSeek 信息。
 """
-from typing import Any
 import warnings
+from typing import Any
 
 from langchain.agents import AgentState, create_agent
 from langchain.agents.middleware import SummarizationMiddleware, wrap_tool_call
@@ -30,7 +30,6 @@ from pydantic import BaseModel, Field
 
 from env_utils import MYSQL_DATABASE_URL
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
-
 
 # 当前依赖版本在 runtime.context 参与内部序列化时，可能打印 Pydantic warning。
 # 这个 warning 不影响工具读取 context；这里过滤掉，保持控制台示例输出清爽。

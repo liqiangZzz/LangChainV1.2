@@ -24,7 +24,6 @@ from langgraph.runtime import Runtime
 
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
-
 # 模型调用前最多保留最近 3 条原始消息。
 # 如果消息超过这个数量，就把更早的消息总结成一条摘要消息。
 # 这里设置得较小，是为了三轮对话就能看到摘要效果。

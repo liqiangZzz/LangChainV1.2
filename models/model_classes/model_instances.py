@@ -1,6 +1,6 @@
 from langchain_core.language_models import BaseChatModel
-from langchain_openai import ChatOpenAI
 from langchain_deepseek import ChatDeepSeek
+from langchain_openai import ChatOpenAI
 
 from env_utils import DEEPSEEK_API_KEY, DEEPSEEK_BASE_URL, GLM_API_KEY, GLM_BASE_URL
 

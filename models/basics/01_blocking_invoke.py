@@ -6,7 +6,6 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
-
 # =====================================================================
 # 1. 单轮字符串调用 —— 最简单的 invoke 用法
 # =====================================================================

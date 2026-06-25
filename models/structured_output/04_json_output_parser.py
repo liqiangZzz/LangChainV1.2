@@ -4,6 +4,7 @@
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
+
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
 

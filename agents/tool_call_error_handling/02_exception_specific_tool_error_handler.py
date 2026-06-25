@@ -22,7 +22,6 @@ from langgraph.prebuilt.tool_node import ToolCallRequest
 
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
-
 # =====================================================================
 # 1. 准备模拟数据 —— 使用内存字典模拟工单系统
 # =====================================================================

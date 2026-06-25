@@ -12,7 +12,6 @@ from typing import Any
 
 from langchain.agents import AgentState, create_agent
 from langchain.agents.middleware import ModelRequest, dynamic_prompt
-
 from langchain_core.tools import tool
 from langgraph.checkpoint.memory import InMemorySaver
 

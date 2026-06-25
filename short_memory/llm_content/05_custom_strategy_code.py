@@ -25,7 +25,6 @@ from langgraph.runtime import Runtime
 
 from models.init_chat_model.init_chat_model_llm import deepseek_llm
 
-
 # 最近消息保留数量。
 # 最近消息通常包含当前问题和它前面的最新上下文，所以无论是否命中关键词，都优先保留。
 KEEP_RECENT_MESSAGES = 3
