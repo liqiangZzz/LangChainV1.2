@@ -234,6 +234,8 @@ Agent，并通过人工决策恢复执行：
 - `05_hitl_approve_reject_edit_respond_demo.py`：组合演示四种决策
 - `06_hitl_multi_descisions_demo.py`：演示一次中断中处理多个工具调用决策
 - `07_hitl_comprehensive_demo.py`：文件管理助手综合示例，使用虚拟文件系统避免真实磁盘操作
+- `08_hitl_stream.py`：演示使用 agent.stream() 流式输出，并在中断恢复时保持流式体验
+- `09_hitl_custom.py`：演示自定义 after_model 中间件，实现按业务规则触发人工审批（如订单金额 >500）
 
 可以从项目根目录按模块运行：
 

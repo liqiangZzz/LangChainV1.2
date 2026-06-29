@@ -27,6 +27,12 @@ Human-in-the-loop 人工介入示例包。
 - 07_hitl_comprehensive_demo.py
   文件管理助手综合示例，用虚拟文件系统串联 approve / reject / edit / respond 四种决策。
 
+- 08_hitl_stream.py
+  演示使用 agent.stream() 流式输出，并在中断恢复时保持流式体验。
+
+- 09_hitl_custom.py
+  演示自定义 after_model 中间件，实现按业务规则触发人工审批（如订单金额 >500）。
+
 运行方式：
 
 - 请从项目根目录使用模块方式运行，例如：
