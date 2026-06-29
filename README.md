@@ -10,6 +10,7 @@
 - Human-in-the-loop 人工介入审批
 - Pydantic、TypedDict、JSON Schema 等结构化输出
 - 静态提示词、动态提示词和 Agent middleware
+- Guardrails 安全护栏：PII 检测与处理
 
 项目中的示例以可直接运行的 Python 脚本为主。公共 DeepSeek 模型实例通过
 LangChain 的 `init_chat_model` 统一入口创建，并集中定义在
@@ -33,6 +34,7 @@ LangChain 的 `init_chat_model` 统一入口创建，并集中定义在
 │   └── llm_content/  # LLM 上下文消息截断、删除、摘要和自定义策略示例
 ├── long_memory/      # Agent 长期记忆、Store 和跨会话偏好示例
 ├── human_in_the_loop/  # Agent 人工介入审批与恢复执行示例
+├── guardrails/         # Agent 安全护栏：PII 检测与处理示例
 ├── docs/skills/      # 项目文档维护 skill
 ├── scripts/          # 文档审计与维护辅助脚本
 ├── env_utils.py      # 加载 DeepSeek 和 MySQL 环境变量
@@ -244,6 +246,26 @@ python -m human_in_the_loop.01_human_in_the_loop_middleware
 python -m human_in_the_loop.02_hitl_approve_reject_demo
 python -m human_in_the_loop.05_hitl_approve_reject_edit_respond_demo
 python -m human_in_the_loop.07_hitl_comprehensive_demo
+```
+
+### Guardrails 安全护栏
+
+`guardrails/` 演示 Agent 中的 PII（个人敏感信息）检测与处理机制：
+
+- `01_redact.py`：使用 redact 策略，将 PII 替换为 [REDACTED_TYPE] 占位符
+- `02_mask.py`：使用 mask 策略，部分遮蔽 PII（如邮箱显示首尾字符）
+- `03_hash.py`：使用 hash 策略，将 PII 替换为可追溯的哈希值，便于审计但不可逆推原文
+- `04_block.py`：使用 block 策略，检测到 PII 时直接抛出异常阻止执行
+- `05_hitl.py`：演示将 HumanInTheLoopMiddleware 作为 guardrail，实现订单金额 >500 时人工审批
+- `06_custom_guardrails_before_agent.py`：自定义 before_agent 中间件，拦截敏感话题
+- `07_custom_guardrails_after_agent.py`：自定义 after_agent 中间件，过滤输出中的敏感信息
+
+可以从项目根目录按模块��行：
+
+```bash
+python -m guardrails.01_redact
+python -m guardrails.03_hash
+python -m guardrails.05_hitl
 ```
 
 ### Agent 短期记忆
